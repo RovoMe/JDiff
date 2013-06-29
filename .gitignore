@@ -1,0 +1,14 @@
+*.class
+
+*.jar
+*.war
+*.ear
+
+.metadata
+.classpath
+.settings
+.project
+
+target
+cache
+/log
