@@ -95,10 +95,10 @@ public class GreedyDiff
 	 * @param snakes The possible solution paths for transforming object <em>pa
 	 *               </em> to <em>pb</em>
 	 * @param vs All saved end points indexed on <em>d</em>
-	 * @param pa Usually the older object which should be compared
-	 * @param N The length of <em>pa</em>
-	 * @param pb Usually the newest object to be compared with <em>pa</em>
-	 * @param M The length of <em>pb</em>
+	 * @param pa Elements of the first object. Usually the original object
+	 * @param N The number of elements of the first object to compare
+	 * @param pb Elements of the second object. Usually the current object
+	 * @param M The number of elements of the second object to compare
 	 * @param V An array of end points for a given k-line
 	 * @param forward Indicates forward or backward comparison of both words
 	 * @throws Exception
@@ -145,10 +145,10 @@ public class GreedyDiff
 	 * 
 	 * @param snakes All found snakes that lead to the solution
 	 * @param vs All saved end points indexed on <em>d</em>
-	 * @param pa Usually the older object which should be compared
-	 * @param pb Usually the newest object to be compared with <em>pa</em>
-	 * @param N The length of <em>pa</em>
-	 * @param M The length of <em>pb</em>
+	 * @param pa Elements of the first object. Usually the original object
+	 * @param pb Elements of the second object. Usually the current object
+	 * @param N The number of elements of the first object to compare
+	 * @param M The number of elements of the second object to compare
 	 * @throws Exception
 	 */
 	static <T> void SolveForward( List<Snake<T>> snakes, List<V> vs, T[] pa, T[] pb, int N, int M ) throws Exception
@@ -165,14 +165,18 @@ public class GreedyDiff
 			int yEnd = xEnd - k;
 
 			if ( xEnd != p.X() || yEnd != p.Y() )
-				throw new Exception( "No solution for " +
-					"d:" + d + " k:" + k + " p:( " + p.X() + ", " + p.Y() + " ) V:( " + xEnd + ", " + yEnd + " )" );
+				throw new Exception( "No solution for " 
+					+ "d:" + d + " k:" + k 
+					+ " p:( " + p.X() + ", " + p.Y() + " )"
+					+ " V:( " + xEnd + ", " + yEnd + " )" );
 
 			Snake<T> solution = new Snake<T>( 0, p.X(), 0, p.Y(), true, 0, V, k, d, pa, pb );
 
 			if ( solution.getXEnd() != p.X() || solution.getYEnd() != p.Y() )
-				throw new Exception( "Missed solution for " +
-					"d:" + d + " k:" + k + " p:( " + p.X() + ", " + p.Y() + " ) V:( " + xEnd + ", " + yEnd + " )" );
+				throw new Exception( "Missed solution for " 
+					+ "d:" + d + " k:" + k 
+					+ " p:( " + p.X() + ", " + p.Y() + " )"
+					+ " V:( " + xEnd + ", " + yEnd + " )" );
 
 			snakes.add(0, solution );
 
@@ -188,10 +192,10 @@ public class GreedyDiff
 	 * 
 	 * @param snakes All found snakes that lead to the solution
 	 * @param vs All saved end points indexed on <em>d</em>
-	 * @param pa Usually the older object which should be compared
-	 * @param pb Usually the newest object to be compared with <em>pa</em>
-	 * @param N The length of <em>pa</em>
-	 * @param M The length of <em>pb</em>
+	 * @param pa Elements of the first object. Usually the original object
+	 * @param pb Elements of the second object. Usually the current object
+	 * @param N The number of elements of the first object to compare
+	 * @param M The number of elements of the second object to compare
 	 * @throws Exception
 	 */
 	static <T> void SolveReverse( List<Snake<T>> snakes, List<V> vs, T[] pa, T[] pb, int N, int M ) throws Exception
@@ -200,24 +204,28 @@ public class GreedyDiff
 
 		for ( int d = vs.size() - 1 ; p.X() < N || p.Y() < M ; d-- )
 		{
-			V V = vs.get(d);
+			V v = vs.get(d);
 
 			int k = p.X() - p.Y();
 
-			int xEnd = V.getK(k);
+			int xEnd = v.getK(k);
 			int yEnd = xEnd - k;
 
 			if ( xEnd != p.X() || yEnd != p.Y() )
-				throw new Exception( "No solution for " +
-					"d:" + d + " k:" + k + " p:( " + p.X() + ", " + p.Y() + " ) V:( " + xEnd + ", " + yEnd + " )" );
+				throw new Exception( "No solution for " 
+					+ "d:" + d + " k:" + k 
+					+ " p:( " + p.X() + ", " + p.Y() + " )"
+					+ " V:( " + xEnd + ", " + yEnd + " )" );
 
-			Snake<T> solution = new Snake<T>( p.X(), N - p.X(), p.Y(), M - p.Y(), false, N - M, V, k, d, pa, pb );
+			Snake<T> solution = new Snake<T>( p.X(), N - p.X(), p.Y(), M - p.Y(), false, N - M, v, k, d, pa, pb );
 
 			if ( solution.getXEnd() != p.X() || solution.getYEnd() != p.Y() )
-				throw new Exception( "Missed solution for " +
-					"d:" + d + " k:" + k + " p:( " + p.X() + ", " + p.Y() + " ) V:( " + xEnd + ", " + yEnd + " )" );
+				throw new Exception( "Missed solution for " 
+					+ "d:" + d + " k:" + k 
+					+ " p:( " + p.X() + ", " + p.Y() + " )"
+					+ " V:( " + xEnd + ", " + yEnd + " )" );
 
-			snakes.add(0, solution );
+			snakes.add( solution );
 
 			p.X(solution.XStart);
 			p.Y(solution.YStart);

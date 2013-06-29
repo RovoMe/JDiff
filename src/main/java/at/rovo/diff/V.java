@@ -18,13 +18,13 @@ class V
 	private int M;
 
 	/** The maximum number of end points to store **/
-	private int _Max;
+	private int max;
 	/** As the length of A and B can be different, the k lines of the forward 
 	 * and reverse algorithms can be different. It is useful to isolate this as
 	 * a variable **/
-	private int _Delta;
+	private int delta;
 	/** Stores the actual x-position **/
-	private int[] _Array;
+	private int[] array;
 	
 	/**
 	 * <p>Stores the x-position of an end point for a given k-line.</p>
@@ -34,7 +34,7 @@ class V
 	 */
 	public void setK(int k, int value)
 	{
-		this._Array[k-this._Delta+this._Max] = value;
+		this.array[k-this.delta+this.max] = value;
 	}
 	
 	/**
@@ -45,7 +45,7 @@ class V
 	 */
 	public int getK(int k)
 	{
-		return _Array[k-this._Delta+this._Max];
+		return array[k-this.delta+this.max];
 	}
 	
 	/**
@@ -73,21 +73,20 @@ class V
 	 */
 	V( int n, int m, boolean forward, boolean linear )
 	{
-//		Debug.Assert( n >= 0 && m >= 0, "V.ctor N:" + n + " M:" + m );
-
-		IsForward = forward;
-		N = n;
-		M = m;
+		this.IsForward = forward;
+		this.N = n;
+		this.M = m;
 
 		// calculate the maximum number of end points to store
-		_Max = ( linear ? ( n + m ) / 2 + 1 : n + m );
-		if ( _Max <= 0 ) _Max = 1;
+		this.max = ( linear ? ( n + m ) / 2 + 1 : n + m );
+		if ( this.max <= 0 ) 
+			this.max = 1;
 
 		// as each point on a k-line can either come from a down or right move
 		// there can only be two successor points for each end-point
-		_Array = new int[ 2 * _Max + 1 ];
+		this.array = new int[ 2 * this.max + 1 ];
 
-		InitStub( n, m, _Max );
+		InitStub( n, m );
 	}
 	
 	/**
@@ -122,38 +121,50 @@ class V
 		return this.N;
 	}
 
-	public void InitStub( int n, int m, int max )
+	/**
+	 * <p>Initializes the k-line based on the comparison direction.</p>
+	 * 
+	 * @param n The length of the first object to compare
+	 * @param m The length of the second object to compare
+	 */
+	public void InitStub( int n, int m)
 	{
-		if ( IsForward ) this.setK(1, 0); // stub for forward
+		if ( this.IsForward ) 
+			this.setK(1, 0); // stub for forward
 		else
 		{
-			_Delta = n - m;
+			this.delta = n - m;
 			this.setK(n - m - 1, n); // stub for backward
 		}
 	}
 
-
+	/**
+	 * <p>Creates a new deep copy of this object.</p>
+	 * 
+	 * @param d Number of differences for the same trace
+	 * @param isForward The comparison direction; True if forward, false otherwise
+	 * @param delta Keeps track of the differences between the first and the 
+	 *              second object to compare as they may differ in length
+	 * @return The deep copy of this object
+	 * @throws Exception If d > the maximum number of end points to store
+	 */
 	public V CreateCopy( int d, boolean isForward, int delta ) throws Exception
 	{
-//		Debug.Assert( !( isForward && delta != 0 ) );
-
 		if ( d == 0 ) d++;
 
 		V o = new V();
 
 		o.IsForward = isForward;
-		o._Max = d;
-		if ( !isForward ) o._Delta = delta;
-		o._Array = new int[ 2 * d + 1 ];
+		o.max = d;
+		if ( !isForward ) 
+			o.delta = delta;
+		o.array = new int[ 2 * d + 1 ];
 
-		if ( d <= _Max )
-		{
-			System.arraycopy(this._Array, (this._Max-this._Delta)-(o._Max-o._Delta), o._Array, 0, o._Array.length);
-		}
+		if ( d <= this.max )
+			System.arraycopy(this.array, (this.max-this.delta)-
+					(o.max-o.delta), o.array, 0, o.array.length);
 		else
-		{
 			throw new Exception( "V.CreateCopy" );
-		}
 
 		return o;
 	}
@@ -161,6 +172,7 @@ class V
 	@Override
 	public String toString()
 	{
-		return "V " + _Array.length + " [ " + ( _Delta - _Max ) + " .. " + _Delta + " .. " + ( _Delta + _Max ) + " ]";
+		return "V " + this.array.length + " [ " + ( this.delta - this.max ) 
+				+ " .. " +	this.delta + " .. " + ( this.delta + this.max ) + " ]";
 	}
 }

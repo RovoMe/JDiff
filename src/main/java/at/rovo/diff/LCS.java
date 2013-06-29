@@ -18,12 +18,12 @@ public class LCS
 	 *               <em>pa</em> to <em>pb</em>. Snakes also contain the 
 	 *               diagonal counts when both elements equals.
 	 * @param pa Usually the older object which should be compared
-	 * @param N The length of <em>pa</em>
+	 * @param N The number of elements of the first object to compare
 	 * @param pb Usually the newest object to be compared with <em>pa</em>
-	 * @param M The length of <em>pb</em>
+	 * @param M The number of elements of the second object to compare
 	 * @param V An array of end points for a given k-line
-	 * @param d number of differences for the same trace
-	 * @return
+	 * @param d The number of differences for the same trace
+	 * @return The segment found by forward comparison
 	 */
 	static <T> Snake<T> Forward( List<Snake<T>> snakes, T[] pa, int N, T[] pb, int M, V V, int d )
 	{
@@ -70,12 +70,12 @@ public class LCS
 	 *               <em>pa</em> to <em>pb</em>. Snakes also contain the 
 	 *               diagonal counts when both elements equals.
 	 * @param pa Usually the older object which should be compared
-	 * @param N The length of <em>pa</em>
+	 * @param N The number of elements of the first object to compare
 	 * @param pb Usually the newest object to be compared with <em>pa</em>
-	 * @param M The length of <em>pb</em>
+	 * @param M The number of elements of the second object to compare
 	 * @param V An array of end points for a given k-line
-	 * @param d number of differences for the same trace
-	 * @return
+	 * @param d The number of differences for the same trace
+	 * @return The segment found by reverse comparison
 	 */
 	static <T> Snake<T> Reverse( List<Snake<T>> snakes, T[] pa, int N, T[] pb, int M, V V, int d )
 	{
@@ -116,6 +116,32 @@ public class LCS
 		return null;
 	}
 
+	/**
+	 * <p>Calculates the middle snake segment by comparing object <em>pa</em> 
+	 * with <em>pb</em> in both directions at the same time for consecutive 
+	 * <em>D</em>'s. The overlap of both comparisons is the so called middle
+	 * snake which is already a part of the solution as proven by Myers.</p>
+	 * 
+	 * @param pa Usually the older object which should be compared
+	 * @param a0 The starting position in the array of elements from the first 
+	 *           object to compare
+	 * @param N The number of elements of the first object to compare
+	 * @param pb Usually the newest object to be compared with <em>pa</em>
+	 * @param b0 The starting position in the array of elements from the second 
+	 *           object to compare
+	 * @param M The number of elements of the second object to compare
+	 * @param VForward An array of end points for a given k-line for the forward 
+	 *                 comparison
+	 * @param VReverse An array of end points for a given k-line for the backward
+	 *                 comparison
+	 * @param forwardVs All saved end points indexed on <em>d</em> for the 
+	 *                  forward comparison
+	 * @param reverseVs All saved end points indexed on <em>d</em> for the 
+	 *                  backward comparison
+	 * @return The first segment found by both comparison directions which is 
+	 *         also called the middle snake
+	 * @throws Exception
+	 */
 	static <T> SnakePair<T> MiddleSnake( T[] pa, int a0, int N, T[] pb, int b0, int M, V VForward, V VReverse, List<V> forwardVs, List<V> reverseVs ) throws Exception
 	{
 		// we only need to find a middle snake with a d which is half of the
@@ -126,9 +152,13 @@ public class LCS
 		// isolate this difference as a variable.
 		int DELTA = N - M;
 
-		VForward.InitStub( N, M, MAX );
-		VReverse.InitStub( N, M, MAX );
+		VForward.InitStub( N, M );
+		VReverse.InitStub( N, M );
 
+		// Each difference - a horizontal deletion or a vertical insertion - is
+		// a move from on k line to its neighbor. As delta is the difference
+		// between the centers of the forward and reverse algorithms, we know
+		// which values of d we need to check for a middle snake.
 		boolean DeltaIsEven = ( DELTA % 2 ) == 0;
 
 		for ( int d = 0 ; d <= MAX ; d++ )
@@ -141,8 +171,11 @@ public class LCS
 				// for even d are on even k-lines only and vice-versa. That's why k+=2
 				for ( int k = -d ; k <= d ; k += 2 )
 				{
+					// calculate the farthest reaching forward path on line k
+					
 					// are we on the down track?
-					boolean down = ( k == -d || ( k != d && VForward.getK(k - 1) < VForward.getK(k + 1) ) );
+					boolean down = ( k == -d || 
+							( k != d && VForward.getK(k - 1) < VForward.getK(k + 1) ) );
 
 					// to get to a line k, we either must move down (k+1) or right (k-1)
 					int xStart = down ? VForward.getK(k + 1) : VForward.getK(k - 1);
@@ -157,7 +190,9 @@ public class LCS
 					// follow diagonals
 					while ( xEnd < N && yEnd < M && pa[ xEnd + a0 ].equals(pb[ yEnd + b0 ]) ) 
 					{ 
-						xEnd++; yEnd++; snake++; 
+						xEnd++; 
+						yEnd++; 
+						snake++; 
 					}
 
 					// save end points
@@ -170,15 +205,17 @@ public class LCS
 					if ( DeltaIsEven || k < DELTA - ( d - 1 ) || k > DELTA + ( d - 1 ) ) 
 						continue;
 
-					// if the path overlaps the farthest reaching reverse 
+					// check if the path overlaps the farthest reaching reverse 
 					// ( D - 1 )-path in diagonal k
 					if ( VForward.getK(k) < VReverse.getK(k) ) 
 						continue;
 
 					// overlap :)
 					Snake<T> forward = new Snake<T>( a0, N, b0, M, true, xStart + a0, yStart + b0, down, snake );
-					forward.D = d;
+					forward.setD(d);
 
+					// we found a middle snake and the shortest edit script
+					// (SES) of length 2D -1
 					return new SnakePair<T>( ( 2 * d ) - 1, forward, null );
 				}
 			}
@@ -196,8 +233,11 @@ public class LCS
 				// for even d are on even k-lines only and vice-versa. That's why k+=2
 				for ( int k = -d + DELTA ; k <= d + DELTA ; k += 2 )
 				{
+					// calculate the farthest reaching reverse path on line k
+					
 					// are we on the down up-track or on the left one?
-					boolean up = ( k == d + DELTA || ( k != -d + DELTA && VReverse.getK(k - 1) < VReverse.getK(k + 1) ) );
+					boolean up = ( k == d + DELTA || 
+							( k != -d + DELTA && VReverse.getK(k - 1) < VReverse.getK(k + 1) ) );
 
 					// to get to a line k, we either must move up (k-1) or left (k+1)
 					int xStart = up ? VReverse.getK(k - 1) : VReverse.getK(k + 1);
@@ -212,7 +252,9 @@ public class LCS
 					// follow diagonals
 					while ( xEnd > 0 && yEnd > 0 && pa[ xEnd + a0 - 1 ].equals(pb[ yEnd + b0 - 1 ]) ) 
 					{ 
-						xEnd--; yEnd--; snake++; 
+						xEnd--; 
+						yEnd--; 
+						snake++; 
 					}
 
 					// save end points
@@ -224,15 +266,17 @@ public class LCS
 					if ( !DeltaIsEven || k < -d || k > d ) 
 						continue;
 
-					// if the path overlaps the farthest reaching forward D-path 
-					// in diagonal k + Δ
+					// check if the path overlaps the farthest reaching forward 
+					// D-path in diagonal k + Δ
 					if ( VReverse.getK(k) > VForward.getK(k) ) 
 						continue;
 
 					// overlap :)
 					Snake<T> reverse = new Snake<T>( a0, N, b0, M, false, xStart + a0, yStart + b0, up, snake );
-					reverse.D = d;
+					reverse.setD(d);
 
+					// we found a middle snake and the shortest edit script
+					// (SES) of length 2D
 					return new SnakePair<T>( 2 * d, null, reverse );
 				}
 			}

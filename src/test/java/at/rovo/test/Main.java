@@ -9,7 +9,7 @@ public class Main
 {
 	public static void main(String[] args) throws Exception
 	{
-		int sel = 5;
+		int sel = 4;
 		
 		Results<String> res = null;
 		

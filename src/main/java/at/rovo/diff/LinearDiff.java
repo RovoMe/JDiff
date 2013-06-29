@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * <p>Performs a linear time and space comparison of two objects by comparing
+ * both objects in both directions to find a overlapping path which is called
+ * the middle snake.</p>
+ * <p>Myers proved that the middle segment is already a part of the solution.
+ * Furthermore the middle segment divides the comparison in two sub problems, 
+ * which further can be compared using this technique.</p>
  * 
  * @author Roman Vottner
  * @see http://simplygenius.net/Article/DiffTutorial2
@@ -84,10 +90,10 @@ public class LinearDiff
 	 *                  <em>d</em>
 	 * @param reverseVs All saved end points in backward direction indexed on 
 	 *                  <em>d</em>
-	 * @param pa Usually the older object which should be compared
-	 * @param N The length of <em>pa</em>
-	 * @param pb Usually the newest object to be compared with <em>pa</em>
-	 * @param M The length of <em>pb</em>
+	 * @param pa Elements of the first object. Usually the original object
+	 * @param N The number of elements of the first object to compare
+	 * @param pb Elements of the second object. Usually the current object
+	 * @param M The number of elements of the second object to compare
 	 * @param VForward An array of end points for a given k-line in forward 
 	 *                 direction
 	 * @param VReverse An array of end points for a given k-line in backward 
@@ -116,12 +122,14 @@ public class LinearDiff
 	 *                  <em>d</em>
 	 * @param reverseVs All saved end points in backward direction indexed on 
 	 *                  <em>d</em>
-	 * @param pa Usually the older object which should be compared
-	 * @param a0
-	 * @param N The length of <em>pa</em>
-	 * @param pb Usually the newest object to be compared with <em>pa</em>
-	 * @param b0
-	 * @param M The length of <em>pb</em>
+	 * @param pa Elements of the first object. Usually the original object
+	 * @param a0 The starting position in the array of elements from the first 
+	 *           object to compare
+	 * @param N The number of elements of the first object to compare
+	 * @param pb Elements of the second object. Usually the current object
+	 * @param b0 The starting position in the array of elements from the second 
+	 *           object to compare
+	 * @param M The number of elements of the second object to compare
 	 * @param VForward An array of end points for a given k-line in forward 
 	 *                 direction
 	 * @param VReverse An array of end points for a given k-line in backward 
@@ -131,7 +139,8 @@ public class LinearDiff
 	 */
 	static <T> void Compare( int recursion, List<Snake<T>> snakes,
 		List<V> forwardVs, List<V> reverseVs,
-		T[] pa, int a0, int N, T[] pb, int b0, int M,
+		T[] pa, int a0, int N, 
+		T[] pb, int b0, int M,
 		V VForward, V VReverse ) throws Exception
 	{
 		if ( M == 0 && N > 0 )
@@ -157,55 +166,61 @@ public class LinearDiff
 		// Initial setup for recursion
 		if ( recursion == 0 )
 		{
-			if ( m.Forward != null ) { m.Forward.IsMiddle = true; }
-			if ( m.Reverse != null ) { m.Reverse.IsMiddle = true; }
+			if ( m.getForward() != null ) 
+				m.getForward().setMiddlePoint(true);
+			if ( m.getReverse() != null )
+				m.getReverse().setMiddlePoint(true);
 		}
 
-		if ( m.D > 1 )
+		// check for edge (D = 0 or 1) or middle segment (D > 1)
+		if ( m.getD() > 1 )
 		{
-			Pair<Integer> xy = ( m.Forward != null ? m.Forward.getStartPoint() : m.Reverse.getEndPoint() );
-			Pair<Integer> uv = ( m.Reverse != null ? m.Reverse.getStartPoint() : m.Forward.getEndPoint() );
-
-			// top left
+			// solve the rectangles that remain to the top left and bottom right
+			
+			// top left .. Compare(A[1..x], x, B[1..y], y)
+			Pair<Integer> xy = ( m.getForward() != null ? m.getForward().getStartPoint() : m.getReverse().getEndPoint() );
 			Compare( recursion + 1, snakes, null, null, pa, a0, xy.X() - a0, pb, b0, xy.Y() - b0, VForward, VReverse );
 
 			// add middle snake to results
-			if ( m.Forward != null ) 
-				snakes.add( m.Forward );
-			if ( m.Reverse != null ) 
-				snakes.add( m.Reverse );
+			if ( m.getForward() != null ) 
+				snakes.add( m.getForward() );
+			if ( m.getReverse() != null ) 
+				snakes.add( m.getReverse() );
 
-			// bottom right
+			// bottom right .. Compare(A[u+1..N], N-u, B[v+1..M], M-v)
+			Pair<Integer> uv = ( m.getReverse() != null ? m.getReverse().getStartPoint() : m.getForward().getEndPoint() );
 			Compare( recursion + 1, snakes, null, null, pa, uv.X(), a0 + N - uv.X(), pb, uv.Y(), b0 + M - uv.Y(), VForward, VReverse );
-
 		}
 		else
 		{
-			if ( m.Forward != null )
+			// we found an edge case. If d == 0 than both segments are identical
+			// if d == 1 than there is exactly one insertion or deletion which
+			// results in a odd delta and therefore a forward snake
+			if ( m.getForward() != null )
 			{
 				// add d = 0 diagonal to results
-				if ( m.Forward.XStart > a0 )
+				if ( m.getForward().XStart > a0 )
 				{
-					if ( m.Forward.XStart - a0 != m.Forward.YStart - b0 ) 
+					if ( m.getForward().XStart - a0 != m.getForward().YStart - b0 ) 
 						throw new Exception( "Missed D0 forward" );
-					snakes.add( new Snake<T>( a0, N, b0, M, true, a0, b0, 0, 0, m.Forward.XStart - a0 ) );
+					snakes.add( new Snake<T>( a0, N, b0, M, true, a0, b0, 0, 0, m.getForward().XStart - a0 ) );
 				}
 
 				// add middle snake to results
-				snakes.add( m.Forward );
+				snakes.add( m.getForward() );
 			}
 
-			if ( m.Reverse != null )
+			if ( m.getReverse() != null )
 			{
 				// add middle snake to results
-				snakes.add( m.Reverse );
+				snakes.add( m.getReverse() );
 
 				// D0
-				if ( m.Reverse.XStart < a0 + N )
+				if ( m.getReverse().XStart < a0 + N )
 				{
-					if ( a0 + N - m.Reverse.XStart != b0 + M - m.Reverse.YStart ) 
+					if ( a0 + N - m.getReverse().XStart != b0 + M - m.getReverse().YStart ) 
 						throw new Exception( "Missed D0 reverse" );
-					snakes.add( new Snake<T>( a0, N, b0, M, true, m.Reverse.XStart, m.Reverse.YStart, 0, 0, a0 + N - m.Reverse.XStart ) );
+					snakes.add( new Snake<T>( a0, N, b0, M, true, m.getReverse().XStart, m.getReverse().YStart, 0, 0, a0 + N - m.getReverse().XStart ) );
 				}
 			}
 		}
