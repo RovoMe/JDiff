@@ -102,7 +102,12 @@ public class LCS
 
 			int snake = 0;
 			// follow diagonals
-			while ( xEnd > 0 && yEnd > 0 && pa[ xEnd - 1 ].equals(pb[ yEnd - 1 ]) ) { xEnd--; yEnd--; snake++; }
+			while ( xEnd > 0 && yEnd > 0 && pa[ xEnd - 1 ].equals(pb[ yEnd - 1 ]) ) 
+			{ 
+				xEnd--; 
+				yEnd--; 
+				snake++; 
+			}
 
 			// save end points
 			V.setK(k,xEnd);
@@ -140,7 +145,7 @@ public class LCS
 	 *                  backward comparison
 	 * @return The first segment found by both comparison directions which is 
 	 *         also called the middle snake
-	 * @throws Exception
+	 * @throws Exception If no middle snake could be found
 	 */
 	static <T> SnakePair<T> MiddleSnake( T[] pa, int a0, int N, T[] pb, int b0, int M, V VForward, V VReverse, List<V> forwardVs, List<V> reverseVs ) throws Exception
 	{
