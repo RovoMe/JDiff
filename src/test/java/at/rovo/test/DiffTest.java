@@ -89,32 +89,14 @@ public class DiffTest
 	 * @param patterns
 	 *            The source files which got compared with each other
 	 */
-	private static void printDifferences(Results<Token> res,
+	public static void printDifferences(Results<Token> res,
 			List<Token[]> patterns)
 	{
 		for (Snake<Token> snake : res.getSnakes())
 		{
-			// X is the position in the first file
-			int Xstart = snake.getStartPoint().X();
-			int Xend = snake.getEndPoint().X();
-			if (!snake.IsForward)
-			{
-				int tmp = Xstart;
-				Xstart = Xend;
-				Xend = tmp;
-			}
-			// Y is the position in the second file
-			int Ystart = snake.getStartPoint().Y();
-			int Yend = snake.getEndPoint().Y();
-			if (!snake.IsForward)
-			{
-				int tmp = Ystart;
-				Ystart = Yend;
-				Yend = tmp;
-			}
-
-			// System.out.println("X.start "+ snake.getStartPoint().X()
-			// +" Y.start "+ snake.getStartPoint().Y()
+			// System.out.println(
+			//   "X.start "+snake.getStartPoint().X()
+			// +" Y.start "+snake.getStartPoint().Y()
 			// +" X.end "+snake.getEndPoint().X()
 			// +" Y.end "+snake.getEndPoint().Y()
 			// +" X.mid "+snake.getMidPoint().X()
@@ -123,70 +105,121 @@ public class DiffTest
 
 			if (snake.IsForward)
 			{
-				// tokens that got deleted from the first file
-				if (snake.ADeleted > 0) 
-				{
-					for (int pos = Xstart; pos < Xend - snake.DiagonalLength; pos++)
-					{
-						System.out.println("D: " + patterns.get(0)[pos]);
-					}
-				}
-				// tokens that got inserted from the second file
-				if (snake.BInserted > 0)
-				{
-					for (int pos = Ystart; pos < Yend - snake.DiagonalLength; pos++)
-					{
-						System.out.println("I: " + patterns.get(1)[pos]);
-					}
-				}
-				// tokens that are equal in both files
-				if (snake.DiagonalLength > 0)
-				{
-					for (int pos = Xstart + snake.ADeleted; pos < Xend; pos++)
-					{
-						System.out.print(patterns.get(0)[pos] + " ");
-					}
-					System.out.println();
-				}
+				printForward(patterns, snake);
 			}
 			else
 			{
-				// tokens that are equal in both files
-				if (snake.DiagonalLength > 0)
-				{
-					for (int pos = Xstart; pos < Xend - snake.ADeleted; pos++)
-					{
-						System.out.print(patterns.get(0)[pos] + " ");
-					}
-					System.out.println();
-				}
-				// tokens that got deleted from the first file
-				if (snake.ADeleted > 0)
-				{
-					for (int pos = Xstart + snake.DiagonalLength; pos < Xend; pos++)
-					{
-						System.out.println("D: " + patterns.get(0)[pos]);
-					}
-				}
-				// tokens that got inserted from the second file
-				if (snake.BInserted > 0)
-				{
-					for (int pos = Ystart + snake.DiagonalLength; pos < Yend; pos++)
-					{
-						System.out.println("I: " + patterns.get(1)[pos]);
-					}
-				}
+				printBackward(patterns, snake);
 			}
 		}
 	}
-
+	
 	/**
-	 * <p>Reads a file and stores its content in a {@link String} so it can
-	 * be processed.</p>
+	 * <p>
+	 * Prints the differences of two files in forward direction.
+	 * </p>
 	 * 
-	 * @param file The file to read
+	 * @param patterns
+	 *            The source files which got compared with each other
+	 * @param snake
+	 *            The snake containing the differences between the last changed
+	 *            tokens and the current token that has been changed
+	 */
+	private static void printForward(List<Token[]> patterns, Snake<Token> snake)
+	{
+		// X is the position in the first file
+		int Xstart = snake.getStartPoint().X();
+		int Xend = snake.getEndPoint().X();
+
+		// Y is the position in the second file
+		int Ystart = snake.getStartPoint().Y();
+		int Yend = snake.getEndPoint().Y();
+			
+		// tokens that got deleted from the first file
+		if (snake.ADeleted > 0) 
+		{
+			for (int pos = Xstart; pos < Xend - snake.DiagonalLength; pos++)
+			{
+				System.out.println("D: " + patterns.get(0)[pos]);
+			}
+		}
+		// tokens that got inserted from the second file
+		if (snake.BInserted > 0)
+		{
+			for (int pos = Ystart; pos < Yend - snake.DiagonalLength; pos++)
+			{
+				System.out.println("I: " + patterns.get(1)[pos]);
+			}
+		}
+		// tokens that are equal in both files
+		if (snake.DiagonalLength > 0)
+		{
+			for (int pos = Xstart + snake.ADeleted; pos < Xend; pos++)
+			{
+				System.out.print(patterns.get(0)[pos] + " ");
+			}
+			System.out.println();
+		}
+		
+	}
+	
+	/**
+	 * <p>Prints the differences of two files in backward direction.</p>
+	 * 
+	 * @param patterns
+	 *            The source files which got compared with each other
+	 * @param snake
+	 *            The snake containing the differences between the last changed
+	 *            tokens and the current token that has been changed
+	 */
+	private static void printBackward(List<Token[]> patterns, Snake<Token> snake)
+	{
+		// X is the position in the first file
+		int Xstart = snake.getEndPoint().X();
+		int Xend = snake.getStartPoint().X();
+
+		// Y is the position in the second file
+		int Ystart = snake.getEndPoint().Y();
+		int Yend = snake.getStartPoint().Y();
+
+		// tokens that are equal in both files
+		if (snake.DiagonalLength > 0)
+		{
+			for (int pos = Xstart; pos < Xend - snake.ADeleted; pos++)
+			{
+				System.out.print(patterns.get(0)[pos] + " ");
+			}
+			System.out.println();
+		}
+		// tokens that got deleted from the first file
+		if (snake.ADeleted > 0)
+		{
+			for (int pos = Xstart + snake.DiagonalLength; pos < Xend; pos++)
+			{
+				System.out.println("D: " + patterns.get(0)[pos]);
+			}
+		}
+		// tokens that got inserted from the second file
+		if (snake.BInserted > 0)
+		{
+			for (int pos = Ystart + snake.DiagonalLength; pos < Yend; pos++)
+			{
+				System.out.println("I: " + patterns.get(1)[pos]);
+			}
+		}
+	}
+	
+	/**
+	 * <p>
+	 * Reads a file and stores its content in a {@link String} so it can be
+	 * processed.
+	 * </p>
+	 * 
+	 * @param file
+	 *            The file to read
 	 * @return The fully read file stored in a {@link String}
-	 * @throws IOException If an error occurs while reading the file
+	 * @throws IOException
+	 *             If an error occurs while reading the file
 	 */
 	private static String readFile(String file) throws IOException
 	{
