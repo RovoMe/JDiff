@@ -64,10 +64,10 @@ public class DiffTest
 			patterns.add(p.toArray(tmp));
 		}
 
-		// Results<Token> res = at.rovo.diff.GreedyDiff.Compare(patterns.get(0),
-		// patterns.get(1), false);
-		Results<Token> res = at.rovo.diff.LinearDiff.Compare(patterns.get(0),
-				patterns.get(1));
+		Results<Token> res;
+//		res = at.rovo.diff.GreedyDiff.Compare(patterns.get(0),patterns.get(1), false);
+		res = at.rovo.diff.LinearDiff.Compare(patterns.get(0),patterns.get(1));
+		
 		if (res.getSnakes() != null)
 		{
 			printDifferences(res, patterns);
