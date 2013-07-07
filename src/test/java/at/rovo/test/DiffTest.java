@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import at.rovo.UrlReader;
+import at.rovo.common.UrlReader;
 import at.rovo.parser.ParseResult;
 import at.rovo.parser.Parser;
 import at.rovo.parser.Token;
@@ -95,15 +95,7 @@ public class DiffTest
 	{
 		for (Snake<Token> snake : res.getSnakes())
 		{
-//			 System.out.println(
-//			   "X.start "+snake.getStartPoint().X()
-//			 +" Y.start "+snake.getStartPoint().Y()
-//			 +" X.end "+snake.getEndPoint().X()
-//			 +" Y.end "+snake.getEndPoint().Y()
-//			 +" X.mid "+snake.getMidPoint().X()
-//			 +" Y.mid "+snake.getMidPoint().Y());
 //			System.out.println(snake);
-
 			if (snake.IsForward)
 			{
 				printForward(patterns, snake);
