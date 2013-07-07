@@ -65,11 +65,12 @@ public class DiffTest
 		}
 
 		Results<Token> res;
-//		res = at.rovo.diff.GreedyDiff.Compare(patterns.get(0),patterns.get(1), false);
-		res = at.rovo.diff.LinearDiff.Compare(patterns.get(0),patterns.get(1));
+		res = at.rovo.diff.GreedyDiff.Compare(patterns.get(0),patterns.get(1), true);
+//		res = at.rovo.diff.LinearDiff.Compare(patterns.get(0),patterns.get(1));
 		
 		if (res.getSnakes() != null)
 		{
+			System.out.println();
 			printDifferences(res, patterns);
 		}
 		else
@@ -94,14 +95,14 @@ public class DiffTest
 	{
 		for (Snake<Token> snake : res.getSnakes())
 		{
-			// System.out.println(
-			//   "X.start "+snake.getStartPoint().X()
-			// +" Y.start "+snake.getStartPoint().Y()
-			// +" X.end "+snake.getEndPoint().X()
-			// +" Y.end "+snake.getEndPoint().Y()
-			// +" X.mid "+snake.getMidPoint().X()
-			// +" Y.mid "+snake.getMidPoint().Y());
-			// System.out.println(snake);
+//			 System.out.println(
+//			   "X.start "+snake.getStartPoint().X()
+//			 +" Y.start "+snake.getStartPoint().Y()
+//			 +" X.end "+snake.getEndPoint().X()
+//			 +" Y.end "+snake.getEndPoint().Y()
+//			 +" X.mid "+snake.getMidPoint().X()
+//			 +" Y.mid "+snake.getMidPoint().Y());
+//			System.out.println(snake);
 
 			if (snake.IsForward)
 			{
@@ -138,18 +139,22 @@ public class DiffTest
 		// tokens that got deleted from the first file
 		if (snake.ADeleted > 0) 
 		{
+			System.out.print("D: ");
 			for (int pos = Xstart; pos < Xend - snake.DiagonalLength; pos++)
 			{
-				System.out.println("D: " + patterns.get(0)[pos]);
+				System.out.print(patterns.get(0)[pos]+" ");
 			}
+			System.out.println();
 		}
 		// tokens that got inserted from the second file
 		if (snake.BInserted > 0)
 		{
+			System.out.print("I: ");
 			for (int pos = Ystart; pos < Yend - snake.DiagonalLength; pos++)
 			{
-				System.out.println("I: " + patterns.get(1)[pos]);
+				System.out.print(patterns.get(1)[pos]+" ");
 			}
+			System.out.println();
 		}
 		// tokens that are equal in both files
 		if (snake.DiagonalLength > 0)
@@ -194,18 +199,22 @@ public class DiffTest
 		// tokens that got deleted from the first file
 		if (snake.ADeleted > 0)
 		{
+			System.out.print("D: ");
 			for (int pos = Xstart + snake.DiagonalLength; pos < Xend; pos++)
 			{
-				System.out.println("D: " + patterns.get(0)[pos]);
+				System.out.print(patterns.get(0)[pos]+" ");
 			}
+			System.out.println();
 		}
 		// tokens that got inserted from the second file
 		if (snake.BInserted > 0)
 		{
+			System.out.print("I: ");
 			for (int pos = Ystart + snake.DiagonalLength; pos < Yend; pos++)
 			{
-				System.out.println("I: " + patterns.get(1)[pos]);
+				System.out.print(patterns.get(1)[pos]+" ");
 			}
+			System.out.println();
 		}
 	}
 	

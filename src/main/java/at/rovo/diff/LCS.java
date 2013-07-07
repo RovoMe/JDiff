@@ -3,26 +3,37 @@ package at.rovo.diff;
 import java.util.List;
 
 /**
- * <p>Provides functions to calculate the longest common subsequence (LCS) for
- * forward, backward and in-between estimations.</p>
+ * <p>
+ * Provides functions to calculate the longest common subsequence (LCS) for
+ * forward, backward and in-between estimations.
+ * </p>
  * 
  * @author Roman Vottner
  */
 public class LCS
 {
 	/**
-	 * <p>Calculates the longest common subsequence (LCS) in a forward manner
-	 * for two objects <em>pa</em> and <em>pb</em>.</p>
+	 * <p>
+	 * Calculates the longest common subsequence (LCS) in a forward manner for
+	 * two objects <em>pa</em> and <em>pb</em>.
+	 * </p>
 	 * 
-	 * @param snakes The actions (deletion, insertion) required to transform 
-	 *               <em>pa</em> to <em>pb</em>. Snakes also contain the 
-	 *               diagonal counts when both elements equals.
-	 * @param pa Usually the older object which should be compared
-	 * @param N The number of elements of the first object to compare
-	 * @param pb Usually the newest object to be compared with <em>pa</em>
-	 * @param M The number of elements of the second object to compare
-	 * @param V An array of end points for a given k-line
-	 * @param d The number of differences for the same trace
+	 * @param snakes
+	 *            The actions (deletion, insertion) required to transform
+	 *            <em>pa</em> to <em>pb</em>. Snakes also contain the diagonal
+	 *            counts when both elements equals.
+	 * @param pa
+	 *            Usually the older object which should be compared
+	 * @param N
+	 *            The number of elements of the first object to compare
+	 * @param pb
+	 *            Usually the newest object to be compared with <em>pa</em>
+	 * @param M
+	 *            The number of elements of the second object to compare
+	 * @param V
+	 *            An array of end points for a given k-line
+	 * @param d
+	 *            The number of differences for the same trace
 	 * @return The segment found by forward comparison
 	 */
 	static <T> Snake<T> Forward( List<Snake<T>> snakes, T[] pa, int N, T[] pb, int M, V V, int d )
@@ -63,18 +74,27 @@ public class LCS
 	}
 
 	/**
-	 * <p>Calculates the longest common subsequence (LCS) in a backward manner
-	 * for two objects <em>pa</em> and <em>pb</em>.</p>
+	 * <p>
+	 * Calculates the longest common subsequence (LCS) in a backward manner for
+	 * two objects <em>pa</em> and <em>pb</em>.
+	 * </p>
 	 * 
-	 * @param snakes The actions (deletion, insertion) required to transform 
-	 *               <em>pa</em> to <em>pb</em>. Snakes also contain the 
-	 *               diagonal counts when both elements equals.
-	 * @param pa Usually the older object which should be compared
-	 * @param N The number of elements of the first object to compare
-	 * @param pb Usually the newest object to be compared with <em>pa</em>
-	 * @param M The number of elements of the second object to compare
-	 * @param V An array of end points for a given k-line
-	 * @param d The number of differences for the same trace
+	 * @param snakes
+	 *            The actions (deletion, insertion) required to transform
+	 *            <em>pa</em> to <em>pb</em>. Snakes also contain the diagonal
+	 *            counts when both elements equals.
+	 * @param pa
+	 *            Usually the older object which should be compared
+	 * @param N
+	 *            The number of elements of the first object to compare
+	 * @param pb
+	 *            Usually the newest object to be compared with <em>pa</em>
+	 * @param M
+	 *            The number of elements of the second object to compare
+	 * @param V
+	 *            An array of end points for a given k-line
+	 * @param d
+	 *            The number of differences for the same trace
 	 * @return The segment found by reverse comparison
 	 */
 	static <T> Snake<T> Reverse( List<Snake<T>> snakes, T[] pa, int N, T[] pb, int M, V V, int d )
@@ -122,30 +142,43 @@ public class LCS
 	}
 
 	/**
-	 * <p>Calculates the middle snake segment by comparing object <em>pa</em> 
-	 * with <em>pb</em> in both directions at the same time for consecutive 
+	 * <p>
+	 * Calculates the middle snake segment by comparing object <em>pa</em> with
+	 * <em>pb</em> in both directions at the same time for consecutive
 	 * <em>D</em>'s. The overlap of both comparisons is the so called middle
-	 * snake which is already a part of the solution as proven by Myers.</p>
+	 * snake which is already a part of the solution as proven by Myers.
+	 * </p>
 	 * 
-	 * @param pa Usually the older object which should be compared
-	 * @param a0 The starting position in the array of elements from the first 
-	 *           object to compare
-	 * @param N The number of elements of the first object to compare
-	 * @param pb Usually the newest object to be compared with <em>pa</em>
-	 * @param b0 The starting position in the array of elements from the second 
-	 *           object to compare
-	 * @param M The number of elements of the second object to compare
-	 * @param VForward An array of end points for a given k-line for the forward 
-	 *                 comparison
-	 * @param VReverse An array of end points for a given k-line for the backward
-	 *                 comparison
-	 * @param forwardVs All saved end points indexed on <em>d</em> for the 
-	 *                  forward comparison
-	 * @param reverseVs All saved end points indexed on <em>d</em> for the 
-	 *                  backward comparison
-	 * @return The first segment found by both comparison directions which is 
+	 * @param pa
+	 *            Usually the older object which should be compared
+	 * @param a0
+	 *            The starting position in the array of elements from the first
+	 *            object to compare
+	 * @param N
+	 *            The number of elements of the first object to compare
+	 * @param pb
+	 *            Usually the newest object to be compared with <em>pa</em>
+	 * @param b0
+	 *            The starting position in the array of elements from the second
+	 *            object to compare
+	 * @param M
+	 *            The number of elements of the second object to compare
+	 * @param VForward
+	 *            An array of end points for a given k-line for the forward
+	 *            comparison
+	 * @param VReverse
+	 *            An array of end points for a given k-line for the backward
+	 *            comparison
+	 * @param forwardVs
+	 *            All saved end points indexed on <em>d</em> for the forward
+	 *            comparison
+	 * @param reverseVs
+	 *            All saved end points indexed on <em>d</em> for the backward
+	 *            comparison
+	 * @return The first segment found by both comparison directions which is
 	 *         also called the middle snake
-	 * @throws Exception If no middle snake could be found
+	 * @throws Exception
+	 *             If no middle snake could be found
 	 */
 	static <T> SnakePair<T> MiddleSnake( T[] pa, int a0, int N, T[] pb, int b0, int M, V VForward, V VReverse, List<V> forwardVs, List<V> reverseVs ) throws Exception
 	{
@@ -172,8 +205,9 @@ public class LCS
 			// checks against reverse D-1
 			try
 			{
-				// An important observation for the implementation is that end points 
-				// for even d are on even k-lines only and vice-versa. That's why k+=2
+				// An important observation for the implementation is that end 
+				// points for even d are on even k-lines only and vice-versa. 
+				// That's why k+=2
 				for ( int k = -d ; k <= d ; k += 2 )
 				{
 					// calculate the farthest reaching forward path on line k
@@ -182,9 +216,11 @@ public class LCS
 					boolean down = ( k == -d || 
 							( k != d && VForward.getK(k - 1) < VForward.getK(k + 1) ) );
 
-					// to get to a line k, we either must move down (k+1) or right (k-1)
+					// to get to a line k, we either must move down (k+1) or 
+					// right (k-1)
 					int xStart = down ? VForward.getK(k + 1) : VForward.getK(k - 1);
-					// y can easily calculated by subtracting k from x --> y = x - k
+					// y can easily calculated by subtracting k from 
+					// x --> y = x - k
 					int yStart = xStart - ( down ? k + 1 : k - 1 );
 
 					// calculate end points
@@ -234,8 +270,9 @@ public class LCS
 			// checks against forward D
 			try
 			{
-				// An important observation for the implementation is that end points 
-				// for even d are on even k-lines only and vice-versa. That's why k+=2
+				// An important observation for the implementation is that end 
+				// points for even d are on even k-lines only and vice-versa. 
+				// That's why k+=2
 				for ( int k = -d + DELTA ; k <= d + DELTA ; k += 2 )
 				{
 					// calculate the farthest reaching reverse path on line k
@@ -244,9 +281,11 @@ public class LCS
 					boolean up = ( k == d + DELTA || 
 							( k != -d + DELTA && VReverse.getK(k - 1) < VReverse.getK(k + 1) ) );
 
-					// to get to a line k, we either must move up (k-1) or left (k+1)
+					// to get to a line k, we either must move up (k-1) or left 
+					// (k+1)
 					int xStart = up ? VReverse.getK(k - 1) : VReverse.getK(k + 1);
-					// y can easily calculated by subtracting k from x --> y = x - k
+					// y can easily calculated by subtracting k from 
+					// x --> y = x - k
 					int yStart = xStart - ( up ? k - 1 : k + 1 );
 
 					// calculate end points

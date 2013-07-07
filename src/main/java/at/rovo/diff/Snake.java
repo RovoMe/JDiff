@@ -1,12 +1,15 @@
 package at.rovo.diff;
 
 /**
- * <p>A snake is a segment along a path which converts an object A to object B
- * by either eliminating elements from object A or inserting elements from 
- * object B.</p>
+ * <p>
+ * A snake is a segment along a path which converts an object A to object B by
+ * either eliminating elements from object A or inserting elements from object
+ * B.
+ * </p>
  * 
  * @author Roman Vottner
- * @param <T> The type of the element the snake will hold
+ * @param <T>
+ *            The type of the element the snake will hold
  */
 public class Snake<T>
 {
@@ -34,19 +37,25 @@ public class Snake<T>
 	 * while 1 means there is either one insertion or one deletion. A value of
 	 * greater than needs to be checked in both directions **/
 	private int D = -1;
-	
+		
 	/**
-	 * <p>Initializes a new snake. The comparison direction can be defined via
-	 * the <em>isForward</em> parameter. If set to true, the comparison will
-	 * be done from start till end, while a value of false will result in a
-	 * backward comparison from end to start.</p>
-	 * <p><em>delta</em> defines the difference in length between the first and
-	 * the second object to compare.</p>
+	 * <p>
+	 * Initializes a new snake. The comparison direction can be defined via the
+	 * <em>isForward</em> parameter. If set to true, the comparison will be done
+	 * from start till end, while a value of false will result in a backward
+	 * comparison from end to start.
+	 * </p>
+	 * <p>
+	 * <em>delta</em> defines the difference in length between the first and the
+	 * second object to compare.
+	 * </p>
 	 * 
-	 * @param isForward If set to true a forward comparison will be done; else
-	 *                  a backward comparison
-	 * @param delta The difference in length between the first and the second
-	 *              object to compare
+	 * @param isForward
+	 *            If set to true a forward comparison will be done; else a
+	 *            backward comparison
+	 * @param delta
+	 *            The difference in length between the first and the second
+	 *            object to compare
 	 */
 	Snake( boolean isForward, int delta )
 	{
@@ -57,24 +66,37 @@ public class Snake<T>
 	}
 	
 	/**
-	 * <p>Initializes a new snake segment.</p>
+	 * <p>
+	 * Initializes a new snake segment.
+	 * </p>
 	 * 
-	 * @param a0 The starting position in the array of elements from the first 
-	 *           object to compare
-	 * @param N The index of the last element from the first object to compare
-	 * @param b0 The starting position in the array of elements from the second 
-	 *           object to compare
-	 * @param M The index of the last element from the second object to compare
-	 * @param isForward The comparison direction; true for a forward comparison, 
-	 *                  false otherwise
-	 * @param xStart The x-position of the current node
-	 * @param yStart The y-position of the current node
-	 * @param aDeleted Defines the number of removed elements from the first 
-	 *                 object (right movements in the graph)
-	 * @param bInserted Defines the number of inserted elements from the second 
-	 *                  object (down movement in the graph)
-	 * @param diagonal Defines the number of equal elements in both objects for 
-	 *                 a given segment
+	 * @param a0
+	 *            The starting position in the array of elements from the first
+	 *            object to compare
+	 * @param N
+	 *            The index of the last element from the first object to compare
+	 * @param b0
+	 *            The starting position in the array of elements from the second
+	 *            object to compare
+	 * @param M
+	 *            The index of the last element from the second object to
+	 *            compare
+	 * @param isForward
+	 *            The comparison direction; true for a forward comparison, false
+	 *            otherwise
+	 * @param xStart
+	 *            The x-position of the current node
+	 * @param yStart
+	 *            The y-position of the current node
+	 * @param aDeleted
+	 *            Defines the number of removed elements from the first object
+	 *            (right movements in the graph)
+	 * @param bInserted
+	 *            Defines the number of inserted elements from the second object
+	 *            (down movement in the graph)
+	 * @param diagonal
+	 *            Defines the number of equal elements in both objects for a
+	 *            given segment
 	 */
 	Snake( int a0, int N, int b0, int M, boolean isForward, int xStart, int yStart, int aDeleted, int bInserted, int diagonal )
 	{
@@ -89,22 +111,34 @@ public class Snake<T>
 	}
 
 	/**
-	 * <p>Initializes a new snake segment.</p>
+	 * <p>
+	 * Initializes a new snake segment.
+	 * </p>
 	 * 
-	 * @param a0 The starting position in the array of elements from the first 
-	 *           object to compare
-	 * @param N The index of the last element from the first object to compare
-	 * @param b0 The starting position in the array of elements from the second 
-	 *           object to compare
-	 * @param M The index of the last element from the second object to compare
-	 * @param isForward The comparison direction; true for a forward comparison, 
-	 *                  false otherwise
-	 * @param xStart The x-position of the current node
-	 * @param yStart The y-position of the current node
-	 * @param down Defines if insertion (down movement; true) or a deletion 
-	 *             (right movement; false) should be done
-	 * @param diagonal Defines the number of equal elements in both objects for 
-	 *                 a given segment
+	 * @param a0
+	 *            The starting position in the array of elements from the first
+	 *            object to compare
+	 * @param N
+	 *            The index of the last element from the first object to compare
+	 * @param b0
+	 *            The starting position in the array of elements from the second
+	 *            object to compare
+	 * @param M
+	 *            The index of the last element from the second object to
+	 *            compare
+	 * @param isForward
+	 *            The comparison direction; true for a forward comparison, false
+	 *            otherwise
+	 * @param xStart
+	 *            The x-position of the current node
+	 * @param yStart
+	 *            The y-position of the current node
+	 * @param down
+	 *            Defines if insertion (down movement; true) or a deletion
+	 *            (right movement; false) should be done
+	 * @param diagonal
+	 *            Defines the number of equal elements in both objects for a
+	 *            given segment
 	 */
 	Snake( int a0, int N, int b0, int M, boolean isForward, int xStart, int yStart, boolean down, int diagonal )
 	{
@@ -119,23 +153,37 @@ public class Snake<T>
 	}
 
 	/**
-	 * <p>Initializes a new instance and calculates the segment based on the
-	 * provided data.</p>
+	 * <p>
+	 * Initializes a new instance and calculates the segment based on the
+	 * provided data.
+	 * </p>
 	 * 
-	 * @param a0 The starting position in the array of elements from the first 
-	 *           object to compare
-	 * @param N The index of the last element from the first object to compare
-	 * @param b0 The starting position in the array of elements from the second 
-	 *           object to compare
-	 * @param M The index of the last element from the second object to compare
-	 * @param forward The comparison direction; true for a forward comparison, 
-	 *                false otherwise
-	 * @param delta The difference in length of both objects to compare
-	 * @param V An array of end points for a given k-line
-	 * @param k The k-line the snake should get calculated for
-	 * @param d Number of differences for the same trace
-	 * @param pa Elements of the first object. Usually the original object
-	 * @param pb Elements of the second object. Usually the current object
+	 * @param a0
+	 *            The starting position in the array of elements from the first
+	 *            object to compare
+	 * @param N
+	 *            The index of the last element from the first object to compare
+	 * @param b0
+	 *            The starting position in the array of elements from the second
+	 *            object to compare
+	 * @param M
+	 *            The index of the last element from the second object to
+	 *            compare
+	 * @param forward
+	 *            The comparison direction; true for a forward comparison, false
+	 *            otherwise
+	 * @param delta
+	 *            The difference in length of both objects to compare
+	 * @param V
+	 *            An array of end points for a given k-line
+	 * @param k
+	 *            The k-line the snake should get calculated for
+	 * @param d
+	 *            Number of differences for the same trace
+	 * @param pa
+	 *            Elements of the first object. Usually the original object
+	 * @param pb
+	 *            Elements of the second object. Usually the current object
 	 */
 	Snake( int a0, int N, int b0, int M, boolean forward, int delta, V V, int k, int d, T[] pa, T[] pb )
 	{
@@ -145,20 +193,32 @@ public class Snake<T>
 	}
 
 	/**
-	 * <p>Calculates a new snake segment depending on the current comparison
-	 * direction.</p>
+	 * <p>
+	 * Calculates a new snake segment depending on the current comparison
+	 * direction.
+	 * </p>
 	 * 
-	 * @param V An array of end points for a given k-line
-	 * @param k The k-line the snake should get calculated for
-	 * @param d Number of differences for the same trace
-	 * @param pa Elements of the first object. Usually the original object
-	 * @param a0 The starting position in the array of elements from the first 
-	 *           object to compare
-	 * @param N The index of the last element from the first object to compare
-	 * @param pb Elements of the second object. Usually the current object
-	 * @param b0 The starting position in the array of elements from the second 
-	 *           object to compare
-	 * @param M The index of the last element from the second object to compare
+	 * @param V
+	 *            An array of end points for a given k-line
+	 * @param k
+	 *            The k-line the snake should get calculated for
+	 * @param d
+	 *            Number of differences for the same trace
+	 * @param pa
+	 *            Elements of the first object. Usually the original object
+	 * @param a0
+	 *            The starting position in the array of elements from the first
+	 *            object to compare
+	 * @param N
+	 *            The index of the last element from the first object to compare
+	 * @param pb
+	 *            Elements of the second object. Usually the current object
+	 * @param b0
+	 *            The starting position in the array of elements from the second
+	 *            object to compare
+	 * @param M
+	 *            The index of the last element from the second object to
+	 *            compare
 	 * @return The calculated snake segment
 	 */
 	Snake<T> Calculate( V V, int k, int d, T[] pa, int a0, int N, T[] pb, int b0, int M )
@@ -169,19 +229,31 @@ public class Snake<T>
 	}
 
 	/**
-	 * <p>Calculates a new snake segment for a forward comparison direction.</p>
+	 * <p>
+	 * Calculates a new snake segment for a forward comparison direction.
+	 * </p>
 	 * 
-	 * @param V An array of end points for a given k-line
-	 * @param k The k-line the snake should get calculated for
-	 * @param d Number of differences for the same trace
-	 * @param pa Elements of the first object. Usually the original object
-	 * @param a0 The starting position in the array of elements from the first 
-	 *           object to compare
-	 * @param N The index of the last element from the first object to compare
-	 * @param pb Elements of the second object. Usually the current object
-	 * @param b0 The starting position in the array of elements from the second 
-	 *           object to compare
-	 * @param M The index of the last element from the second object to compare
+	 * @param V
+	 *            An array of end points for a given k-line
+	 * @param k
+	 *            The k-line the snake should get calculated for
+	 * @param d
+	 *            Number of differences for the same trace
+	 * @param pa
+	 *            Elements of the first object. Usually the original object
+	 * @param a0
+	 *            The starting position in the array of elements from the first
+	 *            object to compare
+	 * @param N
+	 *            The index of the last element from the first object to compare
+	 * @param pb
+	 *            Elements of the second object. Usually the current object
+	 * @param b0
+	 *            The starting position in the array of elements from the second
+	 *            object to compare
+	 * @param M
+	 *            The index of the last element from the second object to
+	 *            compare
 	 * @return The calculated snake segment
 	 */
 	private Snake<T> CalculateForward( V V, int k, int d, T[] pa, int a0, int N, T[] pb, int b0, int M )
@@ -220,19 +292,31 @@ public class Snake<T>
 	}
 
 	/**
-	 * <p>Calculates a new snake segment for a backward comparison direction.</p>
+	 * <p>
+	 * Calculates a new snake segment for a backward comparison direction.
+	 * </p>
 	 * 
-	 * @param V An array of end points for a given k-line
-	 * @param k The k-line the snake should get calculated for
-	 * @param d Number of differences for the same trace
-	 * @param pa Elements of the first object. Usually the original object
-	 * @param a0 The starting position in the array of elements from the first 
-	 *           object to compare
-	 * @param N The index of the last element from the first object to compare
-	 * @param pb Elements of the second object. Usually the current object
-	 * @param b0 The starting position in the array of elements from the second 
-	 *           object to compare
-	 * @param M The index of the last element from the second object to compare
+	 * @param V
+	 *            An array of end points for a given k-line
+	 * @param k
+	 *            The k-line the snake should get calculated for
+	 * @param d
+	 *            Number of differences for the same trace
+	 * @param pa
+	 *            Elements of the first object. Usually the original object
+	 * @param a0
+	 *            The starting position in the array of elements from the first
+	 *            object to compare
+	 * @param N
+	 *            The index of the last element from the first object to compare
+	 * @param pb
+	 *            Elements of the second object. Usually the current object
+	 * @param b0
+	 *            The starting position in the array of elements from the second
+	 *            object to compare
+	 * @param M
+	 *            The index of the last element from the second object to
+	 *            compare
 	 * @return The calculated snake segment
 	 */
 	private Snake<T> CalculateBackward( V V, int k, int d, T[] pa, int a0, int N, T[] pb, int b0, int M )
@@ -272,7 +356,9 @@ public class Snake<T>
 	}
 	
 	/**
-	 * <p>Returns the start point of this snake segment.</p>
+	 * <p>
+	 * Returns the start point of this snake segment.
+	 * </p>
 	 * 
 	 * @return The start point of this snake segment
 	 */
@@ -282,7 +368,9 @@ public class Snake<T>
 	}
 	
 	/**
-	 * <p>Returns the mid point of this snake segment.</p>
+	 * <p>
+	 * Returns the mid point of this snake segment.
+	 * </p>
 	 * 
 	 * @return The mid point of this snake segment
 	 */
@@ -292,7 +380,9 @@ public class Snake<T>
 	}
 	
 	/**
-	 * <p>Returns the end point of this snake segment.</p>
+	 * <p>
+	 * Returns the end point of this snake segment.
+	 * </p>
 	 * 
 	 * @return The end point of this snake segment
 	 */
@@ -302,7 +392,9 @@ public class Snake<T>
 	}
 	
 	/**
-	 * <p>Returns the x-position of the mid point for this snake segment.</p>
+	 * <p>
+	 * Returns the x-position of the mid point for this snake segment.
+	 * </p>
 	 * 
 	 * @return The x-position of the mid point
 	 */
@@ -314,7 +406,9 @@ public class Snake<T>
 	}
 	
 	/**
-	 * <p>Returns the y-position of the mid point for this snake segment.</p>
+	 * <p>
+	 * Returns the y-position of the mid point for this snake segment.
+	 * </p>
 	 * 
 	 * @return The y-position of the mid point
 	 */
@@ -326,7 +420,9 @@ public class Snake<T>
 	}
 	
 	/**
-	 * <p>Returns the x-position of the end point for this snake segment.</p>
+	 * <p>
+	 * Returns the x-position of the end point for this snake segment.
+	 * </p>
 	 * 
 	 * @return The x-position of the end point
 	 */
@@ -338,7 +434,9 @@ public class Snake<T>
 	}
 	
 	/**
-	 * <p>Returns the y-position of the end point for this snake segment.</p>
+	 * <p>
+	 * Returns the y-position of the end point for this snake segment.
+	 * </p>
 	 * 
 	 * @return The y-position of the end point
 	 */
@@ -350,10 +448,12 @@ public class Snake<T>
 	}
 	
 	/**
-	 * <p>Returns if this snake segment is a middle point.</p>
+	 * <p>
+	 * Returns if this snake segment is a middle point.
+	 * </p>
 	 * 
-	 * @return true indicates that this segment is a middle point; false that it 
-	 *              is not a middle point
+	 * @return true indicates that this segment is a middle point; false that it
+	 *         is not a middle point
 	 */
 	public boolean isMiddlePoint()
 	{
@@ -361,10 +461,13 @@ public class Snake<T>
 	}
 	
 	/**
-	 * <p>Defines if this snake segment is a middle point.</p>
+	 * <p>
+	 * Defines if this snake segment is a middle point.
+	 * </p>
 	 * 
-	 * @param isMiddle true indicates that this segment is a middle point, false
-	 *                 that it is not a middle point
+	 * @param isMiddle
+	 *            true indicates that this segment is a middle point, false that
+	 *            it is not a middle point
 	 */
 	public void setMiddlePoint(boolean isMiddle)
 	{
@@ -372,8 +475,10 @@ public class Snake<T>
 	}
 	
 	/**
-	 * <p>Returns the number of differences between the first and the second 
-	 * object in that trace and for that segment.</p>
+	 * <p>
+	 * Returns the number of differences between the first and the second object
+	 * in that trace and for that segment.
+	 * </p>
 	 * 
 	 * @return The number of differences in that trace
 	 */
@@ -383,11 +488,13 @@ public class Snake<T>
 	}
 	
 	/**
-	 * <p>Sets the d contours for this segment which correspond to the number of
+	 * <p>
+	 * Sets the d contours for this segment which correspond to the number of
 	 * differences in that trace, irrespective of the number of equal elements.
 	 * </p>
 	 * 
-	 * @param d The number of differences in that trace
+	 * @param d
+	 *            The number of differences in that trace
 	 */
 	public void setD(int d)
 	{
@@ -405,17 +512,24 @@ public class Snake<T>
 	}
 
 	/**
-	 * <p>Removes the effects of a single insertion (down or up movement in the
+	 * <p>
+	 * Removes the effects of a single insertion (down or up movement in the
 	 * graph) if the x-position of the starting vertex equals <em>a0</em> and
-	 * the y-position of the starting vertex equals the y-position of <em>b0</em>
-	 * before the insertion.</p>
+	 * the y-position of the starting vertex equals the y-position of
+	 * <em>b0</em> before the insertion.
+	 * </p>
 	 * 
-	 * @param a0 The starting position in the array of elements from the first 
-	 *           object to compare
-	 * @param N The index of the last element from the first object to compare
-	 * @param b0 The starting position in the array of elements from the second 
-	 *           object to compare
-	 * @param M The index of the last element from the second object to compare
+	 * @param a0
+	 *            The starting position in the array of elements from the first
+	 *            object to compare
+	 * @param N
+	 *            The index of the last element from the first object to compare
+	 * @param b0
+	 *            The starting position in the array of elements from the second
+	 *            object to compare
+	 * @param M
+	 *            The index of the last element from the second object to
+	 *            compare
 	 */
 	private void RemoveStubs( int a0, int N, int b0, int M )
 	{
@@ -435,5 +549,51 @@ public class Snake<T>
 				this.BInserted = 0;
 			}
 		}
+	}
+	
+	/**
+	 * <p>
+	 * Combines two snakes of the same kind to reduce the number of returned
+	 * snakes.
+	 * </p>
+	 * <p>
+	 * A snake is of the same kind if both are in the same direction and if both
+	 * have either a positive ADeleted field or a positive BInserted field, but
+	 * not either a positive ADeleted and the other a positive BInserted field!
+	 * Moreover, if the snake to append has a DiagonalLength > 0 it is not meant
+	 * to be of the same kind and therefore should not be appended to this
+	 * snake.
+	 * </p>
+	 * 
+	 * @param snake
+	 *            The snake to append to the current snake
+	 * @return true if the snake could be appended to this snake; false
+	 *         otherwise
+	 */
+	boolean append(Snake<T> snake)
+	{
+		if (((this.IsForward && this.DiagonalLength >= 0) 
+				|| (!this.IsForward && snake.DiagonalLength >= 0)) && 
+				(this.ADeleted > 0 && snake.ADeleted > 0 
+						|| this.BInserted > 0 && snake.BInserted > 0))
+		{
+			this.ADeleted += snake.ADeleted;
+			this.BInserted += snake.BInserted;
+			
+			this.DiagonalLength += snake.DiagonalLength;
+			
+			if (this.IsForward)
+			{
+				this.XStart = Math.min(this.XStart, snake.XStart);
+				this.YStart = Math.min(this.YStart, snake.YStart);
+			}
+			else
+			{
+				this.XStart = Math.max(this.XStart, snake.XStart);
+				this.YStart = Math.max(this.YStart, snake.YStart);
+			}
+			return true;
+		}
+		return false;
 	}
 }

@@ -1,10 +1,14 @@
 package at.rovo.diff;
 
 /**
- * <p>This class is a helper class to store the actual x-positions of end-points
- * on a k-line.</p>
- * <p>It further provides a method to calculate the y-position for end-points
- * based on the x-position and the k-line the end point is lying on.</p>
+ * <p>
+ * This class is a helper class to store the actual x-positions of end-points on
+ * a k-line.
+ * </p>
+ * <p>
+ * It further provides a method to calculate the y-position for end-points based
+ * on the x-position and the k-line the end point is lying on.
+ * </p>
  * 
  * @author Roman Vottner
  */
@@ -27,10 +31,14 @@ class V
 	private int[] array;
 	
 	/**
-	 * <p>Stores the x-position of an end point for a given k-line.</p>
+	 * <p>
+	 * Stores the x-position of an end point for a given k-line.
+	 * </p>
 	 * 
-	 * @param k The k-line to store the position for
-	 * @param value The x-position of the end point
+	 * @param k
+	 *            The k-line to store the position for
+	 * @param value
+	 *            The x-position of the end point
 	 */
 	public void setK(int k, int value)
 	{
@@ -38,9 +46,12 @@ class V
 	}
 	
 	/**
-	 * <p>Returns the x-position for an end point for a given k-line</p>
+	 * <p>
+	 * Returns the x-position for an end point for a given k-line
+	 * </p>
 	 * 
-	 * @param k The k-line to recall the x-position for
+	 * @param k
+	 *            The k-line to recall the x-position for
 	 * @return The x-position of an end point
 	 */
 	public int getK(int k)
@@ -49,27 +60,40 @@ class V
 	}
 	
 	/**
-	 * <p>Calculates the y-position of an end point based on the x-position and
-	 * the k-line.</p>
+	 * <p>
+	 * Calculates the y-position of an end point based on the x-position and the
+	 * k-line.
+	 * </p>
 	 * 
-	 * @param k The k-line the end point is on
+	 * @param k
+	 *            The k-line the end point is on
 	 * @return The y-position of the end point
 	 */
 	public int Y( int k ) { return this.getK(k) - k; }
 
 	/**
-	 * <p>Package private constructor</p>
+	 * <p>
+	 * Package private constructor
+	 * </p>
 	 */
 	V() { }
 
 	/**
-	 * <p>Initializes a new instance of this helper class.</p>
+	 * <p>
+	 * Initializes a new instance of this helper class.
+	 * </p>
 	 * 
-	 * @param n The length of the first object which gets compared to the second
-	 * @param m The length of the second object which gets compared to the first
-	 * @param forward The comparison direction; True if forward, false otherwise
-	 * @param linear True if a linear comparison should be used for comparing
-	 *               two objects or the greedy method (false)
+	 * @param n
+	 *            The length of the first object which gets compared to the
+	 *            second
+	 * @param m
+	 *            The length of the second object which gets compared to the
+	 *            first
+	 * @param forward
+	 *            The comparison direction; True if forward, false otherwise
+	 * @param linear
+	 *            True if a linear comparison should be used for comparing two
+	 *            objects or the greedy method (false)
 	 */
 	V( int n, int m, boolean forward, boolean linear )
 	{
@@ -90,7 +114,9 @@ class V
 	}
 	
 	/**
-	 * <p>Returns the comparison direction.</p>
+	 * <p>
+	 * Returns the comparison direction.
+	 * </p>
 	 * 
 	 * @return True if the comparison direction is forward, false otherwise
 	 */
@@ -100,8 +126,9 @@ class V
 	}
 	
 	/**
-	 * <p>Returns the length of the second object which gets compared to the
-	 * first.</p>
+	 * <p>
+	 * Returns the length of the second object which gets compared to the first.
+	 * </p>
 	 * 
 	 * @return The length of the second object
 	 */
@@ -111,8 +138,9 @@ class V
 	}
 	
 	/**
-	 * <p>Returns the length of the first object which gets compared to the
-	 * second.</p>
+	 * <p>
+	 * Returns the length of the first object which gets compared to the second.
+	 * </p>
 	 * 
 	 * @return The length of the first object
 	 */
@@ -122,10 +150,14 @@ class V
 	}
 
 	/**
-	 * <p>Initializes the k-line based on the comparison direction.</p>
+	 * <p>
+	 * Initializes the k-line based on the comparison direction.
+	 * </p>
 	 * 
-	 * @param n The length of the first object to compare
-	 * @param m The length of the second object to compare
+	 * @param n
+	 *            The length of the first object to compare
+	 * @param m
+	 *            The length of the second object to compare
 	 */
 	public void InitStub( int n, int m)
 	{
@@ -139,14 +171,20 @@ class V
 	}
 
 	/**
-	 * <p>Creates a new deep copy of this object.</p>
+	 * <p>
+	 * Creates a new deep copy of this object.
+	 * </p>
 	 * 
-	 * @param d Number of differences for the same trace
-	 * @param isForward The comparison direction; True if forward, false otherwise
-	 * @param delta Keeps track of the differences between the first and the 
-	 *              second object to compare as they may differ in length
+	 * @param d
+	 *            Number of differences for the same trace
+	 * @param isForward
+	 *            The comparison direction; True if forward, false otherwise
+	 * @param delta
+	 *            Keeps track of the differences between the first and the
+	 *            second object to compare as they may differ in length
 	 * @return The deep copy of this object
-	 * @throws Exception If d > the maximum number of end points to store
+	 * @throws Exception
+	 *             If d > the maximum number of end points to store
 	 */
 	public V CreateCopy( int d, boolean isForward, int delta ) throws Exception
 	{

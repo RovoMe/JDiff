@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>Performs a linear time and space comparison of two objects by comparing
- * both objects in both directions to find a overlapping path which is called
- * the middle snake.</p>
- * <p>Myers proved that the middle segment is already a part of the solution.
- * Furthermore the middle segment divides the comparison in two sub problems, 
- * which further can be compared using this technique.</p>
+ * <p>
+ * Performs a linear time and space comparison of two objects by comparing both
+ * objects in both directions to find a overlapping path which is called the
+ * middle snake.
+ * </p>
+ * <p>
+ * Myers proved that the middle segment is already a part of the solution.
+ * Furthermore the middle segment divides the comparison in two sub problems,
+ * which further can be compared using this technique.
+ * </p>
  * 
  * @author Roman Vottner
  * @see http://simplygenius.net/Article/DiffTutorial2
@@ -18,13 +22,17 @@ import java.util.List;
 public class LinearDiff
 {
 	/**
-	 * <p>Compares two character sequences or strings with each other and 
+	 * <p>
+	 * Compares two character sequences or strings with each other and
 	 * calculates the shortest edit sequence (SES) as well as the longest common
 	 * subsequence (LCS) to transfer input <em>a</em> to input <em>b</em>. The
-	 * SES are the necessary actions required to perform the transformation.</p>
+	 * SES are the necessary actions required to perform the transformation.
+	 * </p>
 	 * 
-	 * @param a The first character sequence; usually the oldest string
-	 * @param b The second character sequence; usually the newest string
+	 * @param a
+	 *            The first character sequence; usually the oldest string
+	 * @param b
+	 *            The second character sequence; usually the newest string
 	 * @return The result containing the snake that lead from input string a to
 	 *         input string b
 	 * @throws Exception
@@ -38,9 +46,12 @@ public class LinearDiff
 	}
 	
 	/**
-	 * <p>Transforms a string into an array of single string characters.</p>
+	 * <p>
+	 * Transforms a string into an array of single string characters.
+	 * </p>
 	 * 
-	 * @param s The string to turn into a string array
+	 * @param s
+	 *            The string to turn into a string array
 	 * @return The input string transformed into an array of string characters
 	 */
 	private static String[] StringToArray(String s)
@@ -53,13 +64,17 @@ public class LinearDiff
 	}
 
 	/**
-	 * <p>Compares two arrays of type <em>T</em> with each other and calculates
-	 * the shortest edit sequence (SES) as well as the longest common 
-	 * subsequence (LCS) to transfer input <em>a</em> to input <em>b</em>. The
-	 * SES are the necessary actions required to perform the transformation.</p>
+	 * <p>
+	 * Compares two arrays of type <em>T</em> with each other and calculates the
+	 * shortest edit sequence (SES) as well as the longest common subsequence
+	 * (LCS) to transfer input <em>a</em> to input <em>b</em>. The SES are the
+	 * necessary actions required to perform the transformation.
+	 * </p>
 	 * 
-	 * @param aa Usually the older object which should be compared
-	 * @param ab Usually the newest object to be compared with <em>aa</em>
+	 * @param aa
+	 *            Usually the older object which should be compared
+	 * @param ab
+	 *            Usually the newest object to be compared with <em>aa</em>
 	 * @return The result containing the snake that lead from input <em>aa</em>
 	 *         to input <em>ab</em>
 	 * @throws Exception
@@ -79,26 +94,37 @@ public class LinearDiff
 	}
 
 	/**
-	 * <p>Compares two arrays of type <em>T</em> with each other and calculates
-	 * the shortest edit sequence (SES) as well as the longest common 
-	 * subsequence (LCS) to transfer input <em>a</em> to input <em>b</em>. The
-	 * SES are the necessary actions required to perform the transformation.</p>
+	 * <p>
+	 * Compares two arrays of type <em>T</em> with each other and calculates the
+	 * shortest edit sequence (SES) as well as the longest common subsequence
+	 * (LCS) to transfer input <em>a</em> to input <em>b</em>. The SES are the
+	 * necessary actions required to perform the transformation.
+	 * </p>
 	 * 
-	 * @param snakes The possible solution paths for transforming object <em>pa
+	 * @param snakes
+	 *            The possible solution paths for transforming object <em>pa
 	 *               </em> to <em>pb</em>
-	 * @param forwardVs All saved end points in forward direction indexed on 
-	 *                  <em>d</em>
-	 * @param reverseVs All saved end points in backward direction indexed on 
-	 *                  <em>d</em>
-	 * @param pa Elements of the first object. Usually the original object
-	 * @param N The number of elements of the first object to compare
-	 * @param pb Elements of the second object. Usually the current object
-	 * @param M The number of elements of the second object to compare
-	 * @param VForward An array of end points for a given k-line in forward 
-	 *                 direction
-	 * @param VReverse An array of end points for a given k-line in backward 
-	 *                 direction
-	 * @param forward Indicates forward or backward comparison of both words
+	 * @param forwardVs
+	 *            All saved end points in forward direction indexed on
+	 *            <em>d</em>
+	 * @param reverseVs
+	 *            All saved end points in backward direction indexed on
+	 *            <em>d</em>
+	 * @param pa
+	 *            Elements of the first object. Usually the original object
+	 * @param N
+	 *            The number of elements of the first object to compare
+	 * @param pb
+	 *            Elements of the second object. Usually the current object
+	 * @param M
+	 *            The number of elements of the second object to compare
+	 * @param VForward
+	 *            An array of end points for a given k-line in forward direction
+	 * @param VReverse
+	 *            An array of end points for a given k-line in backward
+	 *            direction
+	 * @param forward
+	 *            Indicates forward or backward comparison of both words
 	 * @throws Exception
 	 */
 	static <T> void Compare( List<Snake<T>> snakes,
@@ -110,31 +136,45 @@ public class LinearDiff
 	}
 
 	/**
-	 * <p>Compares two arrays of type <em>T</em> with each other and calculates
-	 * the shortest edit sequence (SES) as well as the longest common 
-	 * subsequence (LCS) to transfer input <em>a</em> to input <em>b</em>. The
-	 * SES are the necessary actions required to perform the transformation.</p>
+	 * <p>
+	 * Compares two arrays of type <em>T</em> with each other and calculates the
+	 * shortest edit sequence (SES) as well as the longest common subsequence
+	 * (LCS) to transfer input <em>a</em> to input <em>b</em>. The SES are the
+	 * necessary actions required to perform the transformation.
+	 * </p>
 	 * 
-	 * @param recursion The number of the current recursive step
-	 * @param snakes The possible solution paths for transforming object <em>pa
+	 * @param recursion
+	 *            The number of the current recursive step
+	 * @param snakes
+	 *            The possible solution paths for transforming object <em>pa
 	 *               </em> to <em>pb</em>
-	 * @param forwardVs All saved end points in forward direction indexed on 
-	 *                  <em>d</em>
-	 * @param reverseVs All saved end points in backward direction indexed on 
-	 *                  <em>d</em>
-	 * @param pa Elements of the first object. Usually the original object
-	 * @param a0 The starting position in the array of elements from the first 
-	 *           object to compare
-	 * @param N The number of elements of the first object to compare
-	 * @param pb Elements of the second object. Usually the current object
-	 * @param b0 The starting position in the array of elements from the second 
-	 *           object to compare
-	 * @param M The number of elements of the second object to compare
-	 * @param VForward An array of end points for a given k-line in forward 
-	 *                 direction
-	 * @param VReverse An array of end points for a given k-line in backward 
-	 *                 direction
-	 * @param forward Indicates forward or backward comparison of both words
+	 * @param forwardVs
+	 *            All saved end points in forward direction indexed on
+	 *            <em>d</em>
+	 * @param reverseVs
+	 *            All saved end points in backward direction indexed on
+	 *            <em>d</em>
+	 * @param pa
+	 *            Elements of the first object. Usually the original object
+	 * @param a0
+	 *            The starting position in the array of elements from the first
+	 *            object to compare
+	 * @param N
+	 *            The number of elements of the first object to compare
+	 * @param pb
+	 *            Elements of the second object. Usually the current object
+	 * @param b0
+	 *            The starting position in the array of elements from the second
+	 *            object to compare
+	 * @param M
+	 *            The number of elements of the second object to compare
+	 * @param VForward
+	 *            An array of end points for a given k-line in forward direction
+	 * @param VReverse
+	 *            An array of end points for a given k-line in backward
+	 *            direction
+	 * @param forward
+	 *            Indicates forward or backward comparison of both words
 	 * @throws Exception
 	 */
 	static <T> void Compare( int recursion, List<Snake<T>> snakes,
@@ -147,14 +187,16 @@ public class LinearDiff
 		{
 			// add N deletions to SES
 			Snake<T> right = new Snake<T>( a0, N, b0, M, true, a0, b0, N, 0, 0 );
-			snakes.add( right );
+			if (snakes.size()==0 || !snakes.get(snakes.size()-1).append(right))
+				snakes.add( right );
 		}
 
 		if ( N == 0 && M > 0 )
 		{
 			// add M insertions to SES
 			Snake<T> down = new Snake<T>( a0, N, b0, M, true, a0, b0, 0, M, 0 );
-			snakes.add( down );
+			if (snakes.size()==0 || !snakes.get(snakes.size()-1).append(down))
+				snakes.add( down );
 		}
 
 		if ( N <= 0 || M <= 0 ) 
@@ -183,9 +225,11 @@ public class LinearDiff
 
 			// add middle snake to results
 			if ( m.getForward() != null ) 
-				snakes.add( m.getForward() );
-			if ( m.getReverse() != null ) 
-				snakes.add( m.getReverse() );
+				if (snakes.size()==0 || !snakes.get(snakes.size()-1).append(m.getForward()))
+					snakes.add( m.getForward() );
+			if ( m.getReverse() != null )
+				if (snakes.size()==0 || !snakes.get(snakes.size()-1).append(m.getReverse()))
+					snakes.add( m.getReverse() );
 
 			// bottom right .. Compare(A[u+1..N], N-u, B[v+1..M], M-v)
 			Pair<Integer> uv = ( m.getReverse() != null ? m.getReverse().getStartPoint() : m.getForward().getEndPoint() );
@@ -203,24 +247,30 @@ public class LinearDiff
 				{
 					if ( m.getForward().XStart - a0 != m.getForward().YStart - b0 ) 
 						throw new Exception( "Missed D0 forward" );
-					snakes.add( new Snake<T>( a0, N, b0, M, true, a0, b0, 0, 0, m.getForward().XStart - a0 ) );
+					Snake<T> snake = new Snake<T>( a0, N, b0, M, true, a0, b0, 0, 0, m.getForward().XStart - a0 );
+					if (snakes.size()==0 || !snakes.get(snakes.size()-1).append(snake))
+						snakes.add( snake );
 				}
 
 				// add middle snake to results
-				snakes.add( m.getForward() );
+				if (snakes.size()==0 || !snakes.get(snakes.size()-1).append(m.getForward()))
+					snakes.add( m.getForward() );
 			}
 
 			if ( m.getReverse() != null )
 			{
 				// add middle snake to results
-				snakes.add( m.getReverse() );
+				if (snakes.size()==0 || !snakes.get(snakes.size()-1).append(m.getReverse()))
+					snakes.add( m.getReverse() );
 
 				// D0
 				if ( m.getReverse().XStart < a0 + N )
 				{
 					if ( a0 + N - m.getReverse().XStart != b0 + M - m.getReverse().YStart ) 
 						throw new Exception( "Missed D0 reverse" );
-					snakes.add( new Snake<T>( a0, N, b0, M, true, m.getReverse().XStart, m.getReverse().YStart, 0, 0, a0 + N - m.getReverse().XStart ) );
+					Snake<T> snake = new Snake<T>( a0, N, b0, M, true, m.getReverse().XStart, m.getReverse().YStart, 0, 0, a0 + N - m.getReverse().XStart );
+					if (snakes.size()==0 || !snakes.get(snakes.size()-1).append(snake))
+						snakes.add( snake );
 				}
 			}
 		}
