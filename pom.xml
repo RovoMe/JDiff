@@ -5,9 +5,14 @@
 	<groupId>at.rovo.diff</groupId>
 	<artifactId>JDiff</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>Java based Diff</name>
 	<description>Java implementation of Myers Diff algorithm, based on a port from the C# implementation done by Nicholas Butler at http://simplygenius.net/Article/DiffTutorial1 or http://www.codeproject.com/Articles/42279/Investigating-Myers-diff-algorithm-Part-1-of-2</description>
 
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
 	<dependencies>
 		<!-- Log4J -->
 		<dependency>
