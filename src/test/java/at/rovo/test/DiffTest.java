@@ -1,17 +1,23 @@
 package at.rovo.test;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import at.rovo.common.UrlReader;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import at.rovo.parser.ParseResult;
 import at.rovo.parser.Parser;
 import at.rovo.parser.Token;
+import at.rovo.diff.DiffUtil;
+import at.rovo.diff.Result;
 import at.rovo.diff.Results;
-import at.rovo.diff.Snake;
 
 /**
  * <p>
@@ -26,14 +32,30 @@ import at.rovo.diff.Snake;
  */
 public class DiffTest
 {
+	/** The logger of this class **/
+	private static Logger LOG;
+	
+	@BeforeClass
+	public static void initLogger() throws URISyntaxException
+	{
+		String path = DiffTest.class.getResource("/log/log4j2-test.xml").toURI().getPath();
+		System.setProperty("log4j.configurationFile", path);
+		LOG = LogManager.getLogger(DiffTest.class);
+	}
+	
+	@AfterClass
+	public static void cleanLogger()
+	{
+		System.clearProperty("log4j.configurationFile");
+	}
+	
 	/**
 	 * <p>
-	 * Entrance point to the application. Reads in two files (
-	 * <em>testPattern1.html</em> and <em>testPattern2.html</em>) from the
-	 * resource directory the test-classpath is pointing to and compares these
-	 * two files with each other and calls
-	 * {@link #printDifferences(Results, List)} to print the differences of both
-	 * files to the console.
+	 * Reads in two files (<em>testPattern1.html</em> and 
+	 * <em>testPattern2.html</em>) from the resource directory the 
+	 * test-classpath is pointing to and compares these two files with each 
+	 * other and calls {@link DiffUtil#getDifferences(Results, List)} to return
+	 * the differences of both files.
 	 * </p>
 	 * 
 	 * @param args
@@ -43,19 +65,20 @@ public class DiffTest
 	 *             Thrown if either an error is thrown while trying to read one
 	 *             of the files to compare or while comparing those files
 	 */
-	public static void main(String[] args) throws Exception
+	@Test
+	public void testDifferencesGreedyDiffForwardDirection() throws Exception
 	{
 		String[] pages = new String[] 
 		{
 				"testPattern1.html",
 				"testPattern2.html" 
 		};
-		List<Token[]> patterns = new ArrayList<Token[]>();
+		List<Token[]> patterns = new ArrayList<>();
 
 		for (String pattern : pages)
 		{
 			URL url = DiffTest.class.getResource("/" + pattern);
-			String html = readFile(url.toURI().getPath());
+			String html = DiffUtil.readFile(url.toURI().getPath());
 			Parser parser = new Parser();
 			ParseResult res = parser.tokenize(html, false);
 			List<Token> p = res.getParsedTokens();
@@ -66,187 +89,281 @@ public class DiffTest
 
 		Results<Token> res;
 		res = at.rovo.diff.GreedyDiff.Compare(patterns.get(0),patterns.get(1), true);
-//		res = at.rovo.diff.LinearDiff.Compare(patterns.get(0),patterns.get(1));
 		
 		if (res.getSnakes() != null)
 		{
-			System.out.println();
-			printDifferences(res, patterns);
+			//DiffUtil.printDifferences(res, patterns);
+			List<Result<Token>> diffResults = DiffUtil.getDifferences(res, patterns);
+			Assert.assertEquals("Unexpected number of diff results found", 5, diffResults.size());
+			// compare the first result object which only should contain the 
+			// same tokens for both files
+			Assert.assertTrue("Forward direction expected", diffResults.get(0).isForwardDirection());
+			Assert.assertTrue("No deleted tokens expected for the 1. diff result object", 
+					diffResults.get(0).getDeletedTokens().isEmpty());
+			Assert.assertTrue("No inserted tokens expected for the 1. diff result object", 
+					diffResults.get(0).getInsertedTokens().isEmpty());
+			Assert.assertEquals("Expected 12 equal tokens for the 1. diff result object", 
+					12, diffResults.get(0).getRegularTokens().size());
+			Assert.assertEquals("Unexpected text found", 
+					"Same: <html> <head> <title> Test Title </title> </head> <body> <p> Simple Text </p> \n", 
+					diffResults.get(0).toString());
+			
+			Assert.assertTrue("Forward direction expected", diffResults.get(1).isForwardDirection());
+			Assert.assertEquals("Expected 2 deleted tokens for the 2. diff result object", 
+					2, diffResults.get(1).getDeletedTokens().size());
+			Assert.assertTrue("No inserted tokens expected for the 2. diff result object",
+					diffResults.get(1).getInsertedTokens().isEmpty());
+			Assert.assertTrue("No equal tokens expected for the 2. diff result object",
+					diffResults.get(1).getRegularTokens().isEmpty());
+			Assert.assertEquals("Unexpected text found for the 2. diff result object", 
+					"Deleted: <a> Sister \n", 
+					diffResults.get(1).toString());
+			
+			Assert.assertTrue("Forward direction expected", diffResults.get(2).isForwardDirection());
+			Assert.assertTrue("No deleted tokens expected for the 3. diff result object",
+					diffResults.get(2).getDeletedTokens().isEmpty());
+			Assert.assertEquals("Expected 2 inserted tokens for the 3. diff result object",
+					2, diffResults.get(2).getInsertedTokens().size());
+			Assert.assertEquals("Expected 1 similar token for the 3. diff result object",
+					1, diffResults.get(2).getRegularTokens().size());
+			Assert.assertEquals("Unexpected text found for the 3. diff result object", 
+					"Inserted: <p> This \nSame: page \n", 
+					diffResults.get(2).toString());
+			
+			Assert.assertTrue("Forward direction expected", diffResults.get(3).isForwardDirection());
+			Assert.assertEquals("Expected 1 deleted token for the 4. diff result object",
+					1, diffResults.get(3).getDeletedTokens().size());
+			Assert.assertTrue("No inserted tokens expected for the 4. diff result object",
+					diffResults.get(3).getInsertedTokens().isEmpty());
+			Assert.assertTrue("No equal tokens expected for the 4. diff result object",
+					diffResults.get(3).getRegularTokens().isEmpty());
+			Assert.assertEquals("Unexpected text found for the 4. diff result object", 
+					"Deleted: </a> \n", 
+					diffResults.get(3).toString());
+			
+			Assert.assertTrue("Forward direction expected", diffResults.get(4).isForwardDirection());
+			Assert.assertTrue("No deleted tokens expected for the 5. diff result object", 
+					diffResults.get(4).getDeletedTokens().isEmpty());
+			Assert.assertEquals("Expected 5 inserted tokens for the 5. diff result object", 
+					5, diffResults.get(4).getInsertedTokens().size());
+			Assert.assertEquals("Expected 2 equal tokens for the 5. diff result object",
+					2, diffResults.get(4).getRegularTokens().size());
+			Assert.assertEquals("Unexpected text found for the 5. diff result object",
+					"Inserted: has an additional paragraph </p> \nSame: </body> </html> \n",
+					diffResults.get(4).toString());
 		}
 		else
-			System.out.println("No snakes found!");
-	}
-
-	/**
-	 * <p>
-	 * Prints the differences of two compared files to the console where lines
-	 * starting with <em>D</em> mark a deletion of a token from the first file
-	 * while lines starting with <em>I</em> indicate an insertion of a token
-	 * from the second file at this position.
-	 * </p>
-	 * 
-	 * @param res
-	 *            The result returned by the comparison algorithm
-	 * @param patterns
-	 *            The source files which got compared with each other
-	 */
-	public static void printDifferences(Results<Token> res,
-			List<Token[]> patterns)
-	{
-		for (Snake<Token> snake : res.getSnakes())
 		{
-//			System.out.println(snake);
-			if (snake.IsForward)
-			{
-				printForward(patterns, snake);
-			}
-			else
-			{
-				printBackward(patterns, snake);
-			}
+			LOG.error("No snakes found!");
+			Assert.fail("No snakes found!");
 		}
 	}
 	
-	/**
-	 * <p>
-	 * Prints the differences of two files in forward direction.
-	 * </p>
-	 * 
-	 * @param patterns
-	 *            The source files which got compared with each other
-	 * @param snake
-	 *            The snake containing the differences between the last changed
-	 *            tokens and the current token that has been changed
-	 */
-	private static void printForward(List<Token[]> patterns, Snake<Token> snake)
+	@Test
+	public void testDifferencesGreedyDiffBackwardDirection() throws Exception
 	{
-		// X is the position in the first file
-		int Xstart = snake.getStartPoint().X();
-		int Xend = snake.getEndPoint().X();
+		String[] pages = new String[] 
+		{
+				"testPattern1.html",
+				"testPattern2.html" 
+		};
+		List<Token[]> patterns = new ArrayList<>();
 
-		// Y is the position in the second file
-		int Ystart = snake.getStartPoint().Y();
-		int Yend = snake.getEndPoint().Y();
+		for (String pattern : pages)
+		{
+			URL url = DiffTest.class.getResource("/" + pattern);
+			String html = DiffUtil.readFile(url.toURI().getPath());
+			Parser parser = new Parser();
+			ParseResult res = parser.tokenize(html, false);
+			List<Token> p = res.getParsedTokens();
+
+			Token[] tmp = new Token[0];
+			patterns.add(p.toArray(tmp));
+		}
+
+		Results<Token> res;
+		res = at.rovo.diff.GreedyDiff.Compare(patterns.get(0),patterns.get(1), false);
+
+		if (res.getSnakes() != null)
+		{
+			List<Result<Token>> diffResults = DiffUtil.getDifferences(res, patterns);
+			Assert.assertEquals("Unexpected number of diff results found", 5, diffResults.size());
+			// compare the first result object which only should contain the 
+			// same tokens for both files
+			Assert.assertFalse("Backward direction expected", diffResults.get(0).isForwardDirection());
+			Assert.assertTrue("No deleted tokens expected for the 1. diff result object", 
+					diffResults.get(0).getDeletedTokens().isEmpty());
+			Assert.assertEquals("Expected 2 equal tokens for the 1. diff result object", 
+					2, diffResults.get(0).getInsertedTokens().size());
+			Assert.assertEquals("Expected 12 equal tokens for the 1. diff result object", 
+					12, diffResults.get(0).getRegularTokens().size());
+			Assert.assertEquals("Unexpected text found", 
+					"Same: <html> <head> <title> Test Title </title> </head> <body> <p> Simple Text </p> \nInserted: <p> This \n", 
+					diffResults.get(0).toString());
 			
-		// tokens that got deleted from the first file
-		if (snake.ADeleted > 0) 
-		{
-			System.out.print("D: ");
-			for (int pos = Xstart; pos < Xend - snake.DiagonalLength; pos++)
-			{
-				System.out.print(patterns.get(0)[pos]+" ");
-			}
-			System.out.println();
+			Assert.assertFalse("Backward direction expected", diffResults.get(1).isForwardDirection());
+			Assert.assertEquals("Expected 2 deleted tokens for the 2. diff result object", 
+					2, diffResults.get(1).getDeletedTokens().size());
+			Assert.assertTrue("No inserted tokens expected for the 2. diff result object",
+					diffResults.get(1).getInsertedTokens().isEmpty());
+			Assert.assertTrue("No equal tokens expected for the 2. diff result object",
+					diffResults.get(1).getRegularTokens().isEmpty());
+			Assert.assertEquals("Unexpected text found for the 2. diff result object", 
+					"Deleted: <a> Sister \n", 
+					diffResults.get(1).toString());
+			
+			Assert.assertFalse("Backward direction expected", diffResults.get(2).isForwardDirection());
+			Assert.assertTrue("No deleted tokens expected for the 3. diff result object",
+					diffResults.get(2).getDeletedTokens().isEmpty());
+			Assert.assertEquals("Expected 2 inserted tokens for the 3. diff result object",
+					5, diffResults.get(2).getInsertedTokens().size());
+			Assert.assertEquals("Expected 1 similar token for the 3. diff result object",
+					1, diffResults.get(2).getRegularTokens().size());
+			Assert.assertEquals("Unexpected text found for the 3. diff result object", 
+					"Same: page \nInserted: has an additional paragraph </p> \n", 
+					diffResults.get(2).toString());
+			
+			Assert.assertFalse("Backward direction expected", diffResults.get(3).isForwardDirection());
+			Assert.assertEquals("Expected 1 deleted token for the 4. diff result object",
+					1, diffResults.get(3).getDeletedTokens().size());
+			Assert.assertTrue("No inserted tokens expected for the 4. diff result object",
+					diffResults.get(3).getInsertedTokens().isEmpty());
+			Assert.assertTrue("No equal tokens expected for the 4. diff result object",
+					diffResults.get(3).getRegularTokens().isEmpty());
+			Assert.assertEquals("Unexpected text found for the 4. diff result object", 
+					"Deleted: </a> \n", 
+					diffResults.get(3).toString());
+			
+			Assert.assertFalse("Backward direction expected", diffResults.get(4).isForwardDirection());
+			Assert.assertTrue("No deleted tokens expected for the 5. diff result object", 
+					diffResults.get(4).getDeletedTokens().isEmpty());
+			Assert.assertTrue("No inserted tokens expected for the 5. diff result object", 
+					diffResults.get(4).getInsertedTokens().isEmpty());
+			Assert.assertEquals("Expected 2 equal tokens for the 5. diff result object",
+					2, diffResults.get(4).getRegularTokens().size());
+			Assert.assertEquals("Unexpected text found for the 5. diff result object",
+					"Same: </body> </html> \n",
+					diffResults.get(4).toString());
 		}
-		// tokens that got inserted from the second file
-		if (snake.BInserted > 0)
+		else
 		{
-			System.out.print("I: ");
-			for (int pos = Ystart; pos < Yend - snake.DiagonalLength; pos++)
-			{
-				System.out.print(patterns.get(1)[pos]+" ");
-			}
-			System.out.println();
+			LOG.error("No snakes found!");
+			Assert.fail("No snakes found!");
 		}
-		// tokens that are equal in both files
-		if (snake.DiagonalLength > 0)
+	}
+	
+	@Test
+	public void testDifferencesLinearDiff() throws Exception
+	{
+		String[] pages = new String[] 
 		{
-			for (int pos = Xstart + snake.ADeleted; pos < Xend; pos++)
-			{
-				System.out.print(patterns.get(0)[pos] + " ");
-			}
-			System.out.println();
+				"testPattern1.html",
+				"testPattern2.html" 
+		};
+		List<Token[]> patterns = new ArrayList<>();
+
+		for (String pattern : pages)
+		{
+			URL url = DiffTest.class.getResource("/" + pattern);
+			String html = DiffUtil.readFile(url.toURI().getPath());
+			Parser parser = new Parser();
+			ParseResult res = parser.tokenize(html, false);
+			List<Token> p = res.getParsedTokens();
+
+			Token[] tmp = new Token[0];
+			patterns.add(p.toArray(tmp));
 		}
+
+		Results<Token> res;
+		res = at.rovo.diff.LinearDiff.Compare(patterns.get(0),patterns.get(1));
 		
-	}
-	
-	/**
-	 * <p>Prints the differences of two files in backward direction.</p>
-	 * 
-	 * @param patterns
-	 *            The source files which got compared with each other
-	 * @param snake
-	 *            The snake containing the differences between the last changed
-	 *            tokens and the current token that has been changed
-	 */
-	private static void printBackward(List<Token[]> patterns, Snake<Token> snake)
-	{
-		// X is the position in the first file
-		int Xstart = snake.getEndPoint().X();
-		int Xend = snake.getStartPoint().X();
-
-		// Y is the position in the second file
-		int Ystart = snake.getEndPoint().Y();
-		int Yend = snake.getStartPoint().Y();
-
-		// tokens that are equal in both files
-		if (snake.DiagonalLength > 0)
+		if (res.getSnakes() != null)
 		{
-			for (int pos = Xstart; pos < Xend - snake.ADeleted; pos++)
-			{
-				System.out.print(patterns.get(0)[pos] + " ");
-			}
-			System.out.println();
+			List<Result<Token>> diffResults = DiffUtil.getDifferences(res, patterns);
+			Assert.assertEquals("Unexpected number of diff results found", 7, diffResults.size());
+			// compare the first result object which only should contain the 
+			// same tokens for both files
+			Assert.assertTrue("Forward direction expected", diffResults.get(0).isForwardDirection());
+			Assert.assertTrue("No deleted tokens expected for the 1. diff result object", 
+					diffResults.get(0).getDeletedTokens().isEmpty());
+			Assert.assertTrue("No inserted tokens expected for the 1. diff result object", 
+					diffResults.get(0).getInsertedTokens().isEmpty());
+			Assert.assertEquals("Expected 12 equal tokens for the 1. diff result object", 
+					12, diffResults.get(0).getRegularTokens().size());
+			Assert.assertEquals("Unexpected text found", 
+					"Same: <html> <head> <title> Test Title </title> </head> <body> <p> Simple Text </p> \n", 
+					diffResults.get(0).toString());
+			
+			Assert.assertTrue("Forward direction expected", diffResults.get(1).isForwardDirection());
+			Assert.assertTrue("No deleted tokens expected for the 2. diff result object", 
+					diffResults.get(1).getDeletedTokens().isEmpty());
+			Assert.assertEquals("No inserted tokens expected for the 2. diff result object",
+					1, diffResults.get(1).getInsertedTokens().size());
+			Assert.assertTrue("No equal tokens expected for the 2. diff result object",
+					diffResults.get(1).getRegularTokens().isEmpty());
+			Assert.assertEquals("Unexpected text found for the 2. diff result object", 
+					"Inserted: <p> \n", 
+					diffResults.get(1).toString());
+			
+			Assert.assertFalse("Backward direction expected", diffResults.get(2).isForwardDirection());
+			Assert.assertEquals("Expected 1 deleted token for the 3. diff result object",
+					1, diffResults.get(2).getDeletedTokens().size());
+			Assert.assertTrue("No inserted tokens expected for the 3. diff result object",
+					diffResults.get(2).getInsertedTokens().isEmpty());
+			Assert.assertTrue("No equal tokens expected for the 3. diff result object",
+					diffResults.get(2).getRegularTokens().isEmpty());
+			Assert.assertEquals("Unexpected text found for the 3. diff result object", 
+					"Deleted: <a> \n", 
+					diffResults.get(2).toString());
+			
+			Assert.assertTrue("Forward direction expected", diffResults.get(3).isForwardDirection());
+			Assert.assertTrue("No deleted tokens expected for the 4. diff result object",
+					diffResults.get(3).getDeletedTokens().isEmpty());
+			Assert.assertEquals("Expected 1 deleted token for the 4. diff result object",
+					1, diffResults.get(3).getInsertedTokens().size());
+			Assert.assertTrue("No equal tokens expected for the 4. diff result object",
+					diffResults.get(3).getRegularTokens().isEmpty());
+			Assert.assertEquals("Unexpected text found for the 4. diff result object", 
+					"Inserted: This \n", 
+					diffResults.get(3).toString());
+			
+			Assert.assertTrue("Forward direction expected", diffResults.get(4).isForwardDirection());
+			Assert.assertEquals("Expected 1 deleted token for the 5. diff result object",
+					1, diffResults.get(4).getDeletedTokens().size());
+			Assert.assertTrue("No inserted tokens expected for the 5. diff result object",
+					diffResults.get(4).getInsertedTokens().isEmpty());
+			Assert.assertTrue("No equal tokens expected for the 5. diff result object",
+					diffResults.get(4).getRegularTokens().isEmpty());
+			Assert.assertEquals("Unexpected text found for the 5. diff result object", 
+					"Deleted: Sister \n", 
+					diffResults.get(4).toString());
+			
+			Assert.assertFalse("Backward direction expected", diffResults.get(5).isForwardDirection());
+			Assert.assertTrue("No deleted tokens expected for the 6. diff result object",
+					diffResults.get(5).getDeletedTokens().isEmpty());
+			Assert.assertEquals("Expected 5 inserted tokens for the 6. diff result object",
+					5, diffResults.get(5).getInsertedTokens().size());
+			Assert.assertEquals("Expected 1 equal token for the 6. diff result object",
+					1, diffResults.get(5).getRegularTokens().size());
+			Assert.assertEquals("Unexpected text found for the 6. diff result object", 
+					"Same: page \nInserted: has an additional paragraph </p> \n", 
+					diffResults.get(5).toString());
+			
+			Assert.assertTrue("Forward direction expected", diffResults.get(6).isForwardDirection());
+			Assert.assertEquals("Expected 1 deleted token for the 7. diff result object",
+					1, diffResults.get(6).getDeletedTokens().size());
+			Assert.assertTrue("No inserted tokens expected for the 7. diff result object",
+					diffResults.get(6).getInsertedTokens().isEmpty());
+			Assert.assertEquals("Expected 2 equal token for the 7. diff result object",
+					2, diffResults.get(6).getRegularTokens().size());
+			Assert.assertEquals("Unexpected text found for the 7. diff result object", 
+					"Deleted: </a> \nSame: </body> </html> \n", 
+					diffResults.get(6).toString());
 		}
-		// tokens that got deleted from the first file
-		if (snake.ADeleted > 0)
+		else
 		{
-			System.out.print("D: ");
-			for (int pos = Xstart + snake.DiagonalLength; pos < Xend; pos++)
-			{
-				System.out.print(patterns.get(0)[pos]+" ");
-			}
-			System.out.println();
+			LOG.error("No snakes found!");
+			Assert.fail("No snakes found!");
 		}
-		// tokens that got inserted from the second file
-		if (snake.BInserted > 0)
-		{
-			System.out.print("I: ");
-			for (int pos = Ystart + snake.DiagonalLength; pos < Yend; pos++)
-			{
-				System.out.print(patterns.get(1)[pos]+" ");
-			}
-			System.out.println();
-		}
-	}
-	
-	/**
-	 * <p>
-	 * Reads a file and stores its content in a {@link String} so it can be
-	 * processed.
-	 * </p>
-	 * 
-	 * @param file
-	 *            The file to read
-	 * @return The fully read file stored in a {@link String}
-	 * @throws IOException
-	 *             If an error occurs while reading the file
-	 */
-	private static String readFile(String file) throws IOException
-	{
-		System.out.print("Reading file '" + file + "'");
-		if (file.startsWith("http://"))
-			return new UrlReader().readPage(file);
-		String result = null;
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		try
-		{
-			StringBuilder sb = new StringBuilder();
-			String line = br.readLine();
-
-			while (line != null)
-			{
-				sb.append(line);
-				sb.append("\n");
-				line = br.readLine();
-			}
-			result = sb.toString();
-		}
-		finally
-		{
-			br.close();
-		}
-		System.out.println(" ... DONE");
-		return result;
 	}
 }

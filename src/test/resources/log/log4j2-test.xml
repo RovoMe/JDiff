@@ -11,7 +11,6 @@ http://logging.apache.org/log4j/2.x/manual/layouts.html
 <configuration status="warn" name="Diff-Test" packages="at.rovo.diff">
 
   <properties>
-    <property name="diffFile">log/Diff.log</property>
     <property name="testFile">log/Test.log</property>
   </properties>
 
@@ -36,17 +35,14 @@ http://logging.apache.org/log4j/2.x/manual/layouts.html
       <PatternLayout pattern="%d{HH:mm:ss} %p %C{1}.%M() - %m%n"/>
       <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
     </Console>
-    <File name="DiffFile" fileName="${diffFile}" append="false">
-      <PatternLayout pattern="%d{HH:mm:ss} %p %C{1}.%M() - %m%n"/>
-    </File>
-    <File name="TestFile" fileName="${testFile}" append="false">
+    <File name="TestLog" fileName="${testFile}" append="false">
       <PatternLayout pattern="%d{HH:mm:ss} %p %C{1}.%M() - %m%n"/>
     </File>
   </appenders>
   
   <loggers>	
-	<logger name="at.rovo.diff" level="info" additivity="true">
-  	  <appender-ref ref="Console"/>
+	<logger name="at.rovo.diff" level="trace" additivity="false">
+  	  <appender-ref ref="TestLog"/>
   	</logger>
   	
     <root level="error">
