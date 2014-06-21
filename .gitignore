@@ -3,11 +3,13 @@
 *.jar
 *.war
 *.ear
+*.iml
 
 .metadata
 .classpath
 .settings
 .project
+.idea/
 
 target
 cache
