@@ -19,8 +19,8 @@ import at.rovo.parser.Token;
  * </p>
  * 
  * @author Roman Vottner
- * @param <E> The type of the compared and processed tokens
  */
+@SuppressWarnings("unused")
 public class DiffUtil
 {
 	/** The logger of this class **/
@@ -363,9 +363,8 @@ public class DiffUtil
 			return new UrlReader().readPage(file);
 		
 		// else read the file from the local storage
-		String result = null;
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		try
+		String result;
+		try(BufferedReader br = new BufferedReader(new FileReader(file)))
 		{
 			StringBuilder sb = new StringBuilder();
 			String line = br.readLine();
@@ -380,10 +379,7 @@ public class DiffUtil
 			}
 			result = sb.toString();
 		}
-		finally
-		{
-			br.close();
-		}
+
 		LOG.trace("Reading file done");
 		return result;
 	}
