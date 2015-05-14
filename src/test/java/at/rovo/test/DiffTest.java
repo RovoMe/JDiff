@@ -1,15 +1,13 @@
 package at.rovo.test;
 
-import java.net.URISyntaxException;
+import java.lang.invoke.MethodHandles;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import at.rovo.parser.ParseResult;
@@ -20,47 +18,26 @@ import at.rovo.diff.Result;
 import at.rovo.diff.Results;
 
 /**
- * <p>
  * This class simple compares two HTML files and prints the differences in both
  * files to the console where a line starting with <em>D</em> marks a deletion
  * of a token (HTML tag or word) from the first file and a line starting with
  * <em>I</em> marks an insertion of a token from the second file at this
  * position.
- * </p>
  * 
  * @author Roman Vottner
  */
 public class DiffTest
 {
 	/** The logger of this class **/
-	private static Logger LOG;
-	
-	@BeforeClass
-	public static void initLogger() throws URISyntaxException
-	{
-		String path = DiffTest.class.getResource("/log/log4j2-test.xml").toURI().getPath();
-		System.setProperty("log4j.configurationFile", path);
-		LOG = LogManager.getLogger(DiffTest.class);
-	}
-	
-	@AfterClass
-	public static void cleanLogger()
-	{
-		System.clearProperty("log4j.configurationFile");
-	}
+	private static Logger LOG = LogManager.getLogger(MethodHandles.lookup().lookupClass());
 	
 	/**
-	 * <p>
 	 * Reads in two files (<em>testPattern1.html</em> and 
 	 * <em>testPattern2.html</em>) from the resource directory the 
 	 * test-classpath is pointing to and compares these two files with each 
 	 * other and calls {@link DiffUtil#getDifferences(Results, List)} to return
 	 * the differences of both files.
-	 * </p>
-	 * 
-	 * @param args
-	 *            Some arguments passed to the application. Note that this
-	 *            example application does not check for any passed parameters
+	 *
 	 * @throws Exception
 	 *             Thrown if either an error is thrown while trying to read one
 	 *             of the files to compare or while comparing those files

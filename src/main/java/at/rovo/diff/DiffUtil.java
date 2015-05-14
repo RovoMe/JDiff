@@ -1,23 +1,19 @@
 package at.rovo.diff;
 
+import at.rovo.common.UrlReader;
+import at.rovo.parser.Token;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import at.rovo.common.UrlReader;
-import at.rovo.parser.Token;
-
 /**
- * <p>
- * This util class provides some helper functions to deal with results returned
- * by the diff algorithm more easily.
- * </p>
- * 
+ * This util class provides some helper functions to deal with results returned by the diff algorithm more easily.
+ *
  * @author Roman Vottner
  */
 @SuppressWarnings("unused")
@@ -29,31 +25,29 @@ public class DiffUtil
 	/** prevent initializations of the util class **/
 	private DiffUtil()
 	{
-		
+
 	}
-	
+
 	/**
-	 * <p>
-	 * Returns the differences of two compared files as a {@link List} of 
-	 * {@link Result} objects. A result object is created for every found 
-	 * difference between the first and second file.
-	 * </p>
-	 * 
+	 * Returns the differences of two compared files as a {@link List} of {@link Result} objects. A result object is
+	 * created for every found difference between the first and second file.
+	 *
 	 * @param res
-	 *            The result returned by the comparison algorithm
+	 * 		The result returned by the comparison algorithm
 	 * @param patterns
-	 *            The source files which got compared with each other
+	 * 		The source files which got compared with each other
 	 */
-	public static <E> List<Result<E>> getDifferences(Results<E> res,
-			List<E[]> patterns)
+	public static <E> List<Result<E>> getDifferences(Results<E> res, List<E[]> patterns)
 	{
 		List<Result<E>> results = new ArrayList<>();
 		for (Snake<E> snake : res.getSnakes())
 		{
 			Result<E> result = new Result<>(snake.IsForward);
 			if (LOG.isTraceEnabled())
+			{
 				LOG.trace("Snake: {}", snake);
-			
+			}
+
 			if (snake.IsForward)
 			{
 				LOG.trace("Following forward snake");
@@ -65,20 +59,18 @@ public class DiffUtil
 				results.add(getBackward(patterns, snake, result));
 			}
 		}
-		
+
 		return results;
 	}
-	
+
 	/**
-	 * <p>
 	 * Prints the differences of two files in forward direction.
-	 * </p>
-	 * 
+	 *
 	 * @param patterns
-	 *            The source files which got compared with each other
+	 * 		The source files which got compared with each other
 	 * @param snake
-	 *            The snake containing the differences between the last changed
-	 *            tokens and the current token that has been changed
+	 * 		The snake containing the differences between the last changed tokens and the current token that has been
+	 * 		changed
 	 */
 	private static <E> Result<E> getForward(List<E[]> patterns, Snake<E> snake, Result<E> result)
 	{
@@ -89,9 +81,9 @@ public class DiffUtil
 		// Y is the position in the second file
 		int Ystart = snake.getStartPoint().Y();
 		int Yend = snake.getEndPoint().Y();
-			
+
 		// tokens that got deleted from the first file
-		if (snake.ADeleted > 0) 
+		if (snake.ADeleted > 0)
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.append("D: ");
@@ -128,21 +120,21 @@ public class DiffUtil
 			}
 			LOG.debug(sb.toString());
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
-	 * <p>Prints the differences of two files in backward direction.</p>
-	 * 
+	 * Prints the differences of two files in backward direction.
+	 *
 	 * @param patterns
-	 *            The source files which got compared with each other
+	 * 		The source files which got compared with each other
 	 * @param snake
-	 *            The snake containing the differences between the last changed
-	 *            tokens and the current token that has been changed
+	 * 		The snake containing the differences between the last changed tokens and the current token that has been
+	 * 		changed
 	 */
 	private static <E> Result<E> getBackward(List<E[]> patterns, Snake<E> snake, Result<E> result)
-	{		
+	{
 		// X is the position in the first file
 		int Xstart = snake.getEndPoint().X();
 		int Xend = snake.getStartPoint().X();
@@ -189,31 +181,29 @@ public class DiffUtil
 			}
 			LOG.debug(sb.toString());
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
-	 * <p>
-	 * Prints the differences of two compared files to the console where lines
-	 * starting with <em>D</em> mark a deletion of a token from the first file
-	 * while lines starting with <em>I</em> indicate an insertion of a token
-	 * from the second file at this position.
-	 * </p>
-	 * 
+	 * Prints the differences of two compared files to the console where lines starting with <em>D</em> mark a deletion
+	 * of a token from the first file while lines starting with <em>I</em> indicate an insertion of a token from the
+	 * second file at this position.
+	 *
 	 * @param res
-	 *            The result returned by the comparison algorithm
+	 * 		The result returned by the comparison algorithm
 	 * @param patterns
-	 *            The source files which got compared with each other
+	 * 		The source files which got compared with each other
 	 */
-	public static void printDifferences(Results<Token> res,
-			List<Token[]> patterns)
+	public static void printDifferences(Results<Token> res, List<Token[]> patterns)
 	{
 		for (Snake<Token> snake : res.getSnakes())
 		{
 			if (LOG.isTraceEnabled())
+			{
 				LOG.trace("Snake: {}", snake);
-			
+			}
+
 			if (snake.IsForward)
 			{
 				LOG.trace("Following forward snake");
@@ -226,17 +216,15 @@ public class DiffUtil
 			}
 		}
 	}
-	
+
 	/**
-	 * <p>
 	 * Prints the differences of two files in forward direction.
-	 * </p>
-	 * 
+	 *
 	 * @param patterns
-	 *            The source files which got compared with each other
+	 * 		The source files which got compared with each other
 	 * @param snake
-	 *            The snake containing the differences between the last changed
-	 *            tokens and the current token that has been changed
+	 * 		The snake containing the differences between the last changed tokens and the current token that has been
+	 * 		changed
 	 */
 	private static void printForward(List<Token[]> patterns, Snake<Token> snake)
 	{
@@ -247,9 +235,9 @@ public class DiffUtil
 		// Y is the position in the second file
 		int Ystart = snake.getStartPoint().Y();
 		int Yend = snake.getEndPoint().Y();
-			
+
 		// tokens that got deleted from the first file
-		if (snake.ADeleted > 0) 
+		if (snake.ADeleted > 0)
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.append("D: ");
@@ -284,18 +272,18 @@ public class DiffUtil
 			LOG.debug(sb.toString());
 		}
 	}
-	
+
 	/**
-	 * <p>Prints the differences of two files in backward direction.</p>
-	 * 
+	 * Prints the differences of two files in backward direction.
+	 *
 	 * @param patterns
-	 *            The source files which got compared with each other
+	 * 		The source files which got compared with each other
 	 * @param snake
-	 *            The snake containing the differences between the last changed
-	 *            tokens and the current token that has been changed
+	 * 		The snake containing the differences between the last changed tokens and the current token that has been
+	 * 		changed
 	 */
 	private static void printBackward(List<Token[]> patterns, Snake<Token> snake)
-	{		
+	{
 		// X is the position in the first file
 		int Xstart = snake.getEndPoint().X();
 		int Xend = snake.getStartPoint().X();
@@ -340,31 +328,32 @@ public class DiffUtil
 			LOG.debug(sb.toString());
 		}
 	}
-	
+
 	/**
-	 * <p>
-	 * Reads a file and stores its content in a {@link String} so it can be
-	 * processed.
-	 * </p>
-	 * 
+	 * Reads a file and stores its content in a {@link String} so it can be processed.
+	 *
 	 * @param file
-	 *            The file to read
+	 * 		The file to read
+	 *
 	 * @return The fully read file stored in a {@link String}
+	 *
 	 * @throws IOException
-	 *             If an error occurs while reading the file
+	 * 		If an error occurs while reading the file
 	 */
 	public static String readFile(String file) throws IOException
 	{
 		LOG.trace("Reading file '{}'", file);
-		
+
 		// if the file is a remote web page, load the page and return its 
 		// content
 		if (file.startsWith("http://"))
+		{
 			return new UrlReader().readPage(file);
-		
+		}
+
 		// else read the file from the local storage
 		String result;
-		try(BufferedReader br = new BufferedReader(new FileReader(file)))
+		try (BufferedReader br = new BufferedReader(new FileReader(file)))
 		{
 			StringBuilder sb = new StringBuilder();
 			String line = br.readLine();

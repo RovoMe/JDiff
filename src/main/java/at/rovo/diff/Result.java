@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>
  * This is a helper class to return the differences in a more convenient way.
- * </p>
- * 
+ *
+ * @param <E>
+ * 		The type of the objects that are compared
+ *
  * @author Roman Vottner
- * @param <E> The type of the objects that are compared
  */
-public class Result<E> 
+public class Result<E>
 {
 	/** Deleted tokens from document 1 **/
 	private final List<E> deletedTokens = new ArrayList<>();
@@ -19,49 +19,49 @@ public class Result<E>
 	private final List<E> insertedTokens = new ArrayList<>();
 	/** Tokens that are equal in both documents **/
 	private final List<E> sameTokens = new ArrayList<>();
-	
+
 	private boolean isForwardDirection = true;
-	
+
 	public Result(boolean isForwardDirection)
 	{
 		this.isForwardDirection = isForwardDirection;
 	}
-	
+
 	public void addDeletedToken(E delToken)
 	{
 		this.deletedTokens.add(delToken);
 	}
-	
+
 	public void addInsertedToken(E insToken)
 	{
 		this.insertedTokens.add(insToken);
 	}
-	
+
 	public void addRegularToken(E regToken)
 	{
 		this.sameTokens.add(regToken);
 	}
-	
+
 	public List<E> getDeletedTokens()
 	{
 		return this.deletedTokens;
 	}
-	
+
 	public List<E> getInsertedTokens()
 	{
 		return this.insertedTokens;
 	}
-	
+
 	public List<E> getRegularTokens()
 	{
 		return this.sameTokens;
 	}
-	
+
 	public boolean isForwardDirection()
 	{
 		return this.isForwardDirection;
 	}
-	
+
 	@Override
 	public String toString()
 	{
@@ -104,7 +104,7 @@ public class Result<E>
 		}
 		return sb.toString();
 	}
-	
+
 	private String printHelp(List<E> list)
 	{
 		StringBuilder sb = new StringBuilder();
