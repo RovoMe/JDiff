@@ -22,285 +22,285 @@ import java.util.List;
  */
 public class GreedyDiff
 {
-	/**
-	 * Compares two character sequences or strings with each other and calculates the shortest edit sequence (SES) as
-	 * well as the longest common subsequence (LCS) to transfer input <em>a</em> to input <em>b</em>. The SES are the
-	 * necessary actions required to perform the transformation.
-	 *
-	 * @param a
-	 * 		The first character sequence; usually the oldest string
-	 * @param b
-	 * 		The second character sequence; usually the newest string
-	 * @param forward
-	 * 		Indicates forward or backward comparison of both words
-	 *
-	 * @return The result containing the snake that lead from input string a to input string b
-	 *
-	 * @throws Exception
-	 */
-	public static Results<String> Compare(String a, String b, boolean forward) throws Exception
-	{
-		String[] aa = StringToArray(a);
-		String[] ab = StringToArray(b);
+    /**
+     * Compares two character sequences or strings with each other and calculates the shortest edit sequence (SES) as
+     * well as the longest common subsequence (LCS) to transfer input <em>a</em> to input <em>b</em>. The SES are the
+     * necessary actions required to perform the transformation.
+     *
+     * @param a
+     *         The first character sequence; usually the oldest string
+     * @param b
+     *         The second character sequence; usually the newest string
+     * @param forward
+     *         Indicates forward or backward comparison of both words
+     *
+     * @return The result containing the snake that lead from input string a to input string b
+     *
+     * @throws Exception
+     */
+    public static Results<String> Compare(String a, String b, boolean forward) throws Exception
+    {
+        String[] aa = StringToArray(a);
+        String[] ab = StringToArray(b);
 
-		return Compare(aa, ab, forward);
-	}
+        return Compare(aa, ab, forward);
+    }
 
-	/**
-	 * Transforms a string into an array of single string characters.
-	 *
-	 * @param s
-	 * 		The string to turn into a string array
-	 *
-	 * @return The input string transformed into an array of string characters
-	 */
-	private static String[] StringToArray(String s)
-	{
-		String[] as = new String[s.length()];
-		int i = 0;
-		for (char c : s.toCharArray())
-		{
-			as[i++] = "" + c;
-		}
-		return as;
-	}
+    /**
+     * Transforms a string into an array of single string characters.
+     *
+     * @param s
+     *         The string to turn into a string array
+     *
+     * @return The input string transformed into an array of string characters
+     */
+    private static String[] StringToArray(String s)
+    {
+        String[] as = new String[s.length()];
+        int i = 0;
+        for (char c : s.toCharArray())
+        {
+            as[i++] = "" + c;
+        }
+        return as;
+    }
 
-	/**
-	 * Compares two arrays of type <em>T</em> with each other and calculates the shortest edit sequence (SES) as well as
-	 * the longest common subsequence (LCS) to transfer input <em>a</em> to input <em>b</em>. The SES are the necessary
-	 * actions required to perform the transformation.
-	 *
-	 * @param aa
-	 * 		Usually the older object which should be compared
-	 * @param ab
-	 * 		Usually the newest object to be compared with <em>aa</em>
-	 * @param forward
-	 * 		Indicates forward or backward comparison of both words
-	 *
-	 * @return The result containing the snake that lead from input <em>aa</em> to input <em>ab</em>
-	 *
-	 * @throws Exception
-	 */
-	public static <T> Results<T> Compare(T[] aa, T[] ab, boolean forward) throws Exception
-	{
-		V V = new V(aa.length, ab.length, forward, false);
+    /**
+     * Compares two arrays of type <em>T</em> with each other and calculates the shortest edit sequence (SES) as well as
+     * the longest common subsequence (LCS) to transfer input <em>a</em> to input <em>b</em>. The SES are the necessary
+     * actions required to perform the transformation.
+     *
+     * @param aa
+     *         Usually the older object which should be compared
+     * @param ab
+     *         Usually the newest object to be compared with <em>aa</em>
+     * @param forward
+     *         Indicates forward or backward comparison of both words
+     *
+     * @return The result containing the snake that lead from input <em>aa</em> to input <em>ab</em>
+     *
+     * @throws Exception
+     */
+    public static <T> Results<T> Compare(T[] aa, T[] ab, boolean forward) throws Exception
+    {
+        V V = new V(aa.length, ab.length, forward, false);
 
-		List<Snake<T>> snakes = new ArrayList<>();
-		List<V> vs = new ArrayList<>();
+        List<Snake<T>> snakes = new ArrayList<>();
+        List<V> vs = new ArrayList<>();
 
-		Compare(snakes, vs, aa, aa.length, ab, ab.length, V, forward);
+        Compare(snakes, vs, aa, aa.length, ab, ab.length, V, forward);
 
-		return new Results<>(snakes, forward, vs);
-	}
+        return new Results<>(snakes, forward, vs);
+    }
 
-	/**
-	 * Compares two arrays of type <em>T</em> with each other and calculates the shortest edit sequence (SES) as well as
-	 * the longest common subsequence (LCS) to transfer input <em>a</em> to input <em>b</em>. The SES are the necessary
-	 * actions required to perform the transformation.
-	 *
-	 * @param snakes
-	 * 		The possible solution paths for transforming object <em>pa </em> to <em>pb</em>
-	 * @param vs
-	 * 		All saved end points indexed on <em>d</em>
-	 * @param pa
-	 * 		Elements of the first object. Usually the original object
-	 * @param N
-	 * 		The number of elements of the first object to compare
-	 * @param pb
-	 * 		Elements of the second object. Usually the current object
-	 * @param M
-	 * 		The number of elements of the second object to compare
-	 * @param V
-	 * 		An array of end points for a given k-line
-	 * @param forward
-	 * 		Indicates forward or backward comparison of both words
-	 *
-	 * @throws Exception
-	 */
-	static <T> void Compare(List<Snake<T>> snakes, List<V> vs, T[] pa, int N, T[] pb, int M, V V, boolean forward)
-			throws Exception
-	{
-		Snake<T> last = null;
+    /**
+     * Compares two arrays of type <em>T</em> with each other and calculates the shortest edit sequence (SES) as well as
+     * the longest common subsequence (LCS) to transfer input <em>a</em> to input <em>b</em>. The SES are the necessary
+     * actions required to perform the transformation.
+     *
+     * @param snakes
+     *         The possible solution paths for transforming object <em>pa </em> to <em>pb</em>
+     * @param vs
+     *         All saved end points indexed on <em>d</em>
+     * @param pa
+     *         Elements of the first object. Usually the original object
+     * @param N
+     *         The number of elements of the first object to compare
+     * @param pb
+     *         Elements of the second object. Usually the current object
+     * @param M
+     *         The number of elements of the second object to compare
+     * @param V
+     *         An array of end points for a given k-line
+     * @param forward
+     *         Indicates forward or backward comparison of both words
+     *
+     * @throws Exception
+     */
+    static <T> void Compare(List<Snake<T>> snakes, List<V> vs, T[] pa, int N, T[] pb, int M, V V, boolean forward)
+            throws Exception
+    {
+        Snake<T> last = null;
 
-		int MAX = N + M;
-		int DELTA = N - M;
+        int MAX = N + M;
+        int DELTA = N - M;
 
-		// calculate the farthest reaching path on each k line for successive d
-		// As the maximum value of d can only be between N (deletions) and -M
-		// (insertion) restrict the area to this.
-		// Note: deletions count as +1 for a k-line, while an insertions count 
-		//       as -1!
-		for (int d = 0; d <= MAX; d++)
-		{
-			// d = number of differences in that trace
-			if (forward)
-			{
-				last = LCS.Forward(snakes, pa, N, pb, M, V, d);
-			}
-			else
-			{
-				last = LCS.Reverse(snakes, pa, N, pb, M, V, d);
-			}
+        // calculate the farthest reaching path on each k line for successive d
+        // As the maximum value of d can only be between N (deletions) and -M
+        // (insertion) restrict the area to this.
+        // Note: deletions count as +1 for a k-line, while an insertions count
+        //       as -1!
+        for (int d = 0; d <= MAX; d++)
+        {
+            // d = number of differences in that trace
+            if (forward)
+            {
+                last = LCS.Forward(snakes, pa, N, pb, M, V, d);
+            }
+            else
+            {
+                last = LCS.Reverse(snakes, pa, N, pb, M, V, d);
+            }
 
-			vs.add(V.CreateCopy(d, forward, (forward ? 0 : DELTA)));
+            vs.add(V.CreateCopy(d, forward, (forward ? 0 : DELTA)));
 
-			if (last != null)
-			{
-				break;
-			}
-		}
+            if (last != null)
+            {
+                break;
+            }
+        }
 
-		if (last == null)
-		{
-			throw new Exception("No solution was found!");
-		}
+        if (last == null)
+        {
+            throw new Exception("No solution was found!");
+        }
 
-		// find the solving snake
-		if (forward)
-		{
-			SolveForward(snakes, vs, pa, pb, N, M);
-		}
-		else
-		{
-			SolveReverse(snakes, vs, pa, pb, N, M);
-		}
-	}
+        // find the solving snake
+        if (forward)
+        {
+            SolveForward(snakes, vs, pa, pb, N, M);
+        }
+        else
+        {
+            SolveReverse(snakes, vs, pa, pb, N, M);
+        }
+    }
 
-	/**
-	 * Finds all snakes that lead to the solution by taking a snapshot of each end point after each iteration of d and
-	 * then working backwards from d<sub>solution</sub> to 0.
-	 *
-	 * @param snakes
-	 * 		All found snakes that lead to the solution
-	 * @param vs
-	 * 		All saved end points indexed on <em>d</em>
-	 * @param pa
-	 * 		Elements of the first object. Usually the original object
-	 * @param pb
-	 * 		Elements of the second object. Usually the current object
-	 * @param N
-	 * 		The number of elements of the first object to compare
-	 * @param M
-	 * 		The number of elements of the second object to compare
-	 *
-	 * @throws Exception
-	 */
-	static <T> void SolveForward(List<Snake<T>> snakes, List<V> vs, T[] pa, T[] pb, int N, int M) throws Exception
-	{
-		Pair<Integer> p = new Pair<>(N, M);
+    /**
+     * Finds all snakes that lead to the solution by taking a snapshot of each end point after each iteration of d and
+     * then working backwards from d<sub>solution</sub> to 0.
+     *
+     * @param snakes
+     *         All found snakes that lead to the solution
+     * @param vs
+     *         All saved end points indexed on <em>d</em>
+     * @param pa
+     *         Elements of the first object. Usually the original object
+     * @param pb
+     *         Elements of the second object. Usually the current object
+     * @param N
+     *         The number of elements of the first object to compare
+     * @param M
+     *         The number of elements of the second object to compare
+     *
+     * @throws Exception
+     */
+    static <T> void SolveForward(List<Snake<T>> snakes, List<V> vs, T[] pa, T[] pb, int N, int M) throws Exception
+    {
+        Pair<Integer> p = new Pair<>(N, M);
 
-		for (int d = vs.size() - 1; p.X() > 0 || p.Y() > 0; d--)
-		{
-			V V = vs.get(d);
+        for (int d = vs.size() - 1; p.X() > 0 || p.Y() > 0; d--)
+        {
+            V V = vs.get(d);
 
-			int k = p.X() - p.Y();
+            int k = p.X() - p.Y();
 
-			int xEnd = V.getK(k);
-			int yEnd = xEnd - k;
+            int xEnd = V.getK(k);
+            int yEnd = xEnd - k;
 
-			if (xEnd != p.X() || yEnd != p.Y())
-			{
-				throw new Exception(
-						"No solution for " + "d:" + d + " k:" + k + " p:( " + p.X() + ", " + p.Y() + " )" + " V:( " +
-						xEnd + ", " + yEnd + " )");
-			}
+            if (xEnd != p.X() || yEnd != p.Y())
+            {
+                throw new Exception(
+                        "No solution for " + "d:" + d + " k:" + k + " p:( " + p.X() + ", " + p.Y() + " )" + " V:( " +
+                        xEnd + ", " + yEnd + " )");
+            }
 
-			Snake<T> solution = new Snake<>(0, p.X(), 0, p.Y(), true, 0, V, k, d, pa, pb);
+            Snake<T> solution = new Snake<>(0, p.X(), 0, p.Y(), true, 0, V, k, d, pa, pb);
 
-			if (solution.getXEnd() != p.X() || solution.getYEnd() != p.Y())
-			{
-				throw new Exception(
-						"Missed solution for " + "d:" + d + " k:" + k + " p:( " + p.X() + ", " + p.Y() + " )" +
-						" V:( " + xEnd + ", " + yEnd + " )");
-			}
+            if (solution.getXEnd() != p.X() || solution.getYEnd() != p.Y())
+            {
+                throw new Exception(
+                        "Missed solution for " + "d:" + d + " k:" + k + " p:( " + p.X() + ", " + p.Y() + " )" +
+                        " V:( " + xEnd + ", " + yEnd + " )");
+            }
 
-			if (snakes.size() > 0)
-			{
-				Snake<T> snake = snakes.get(0);
-				// combine snakes of the same kind
-				if (!snake.append(solution))
-				{
-					snakes.add(0, solution);
-				}
-			}
-			else
-			{
-				snakes.add(0, solution);
-			}
+            if (snakes.size() > 0)
+            {
+                Snake<T> snake = snakes.get(0);
+                // combine snakes of the same kind
+                if (!snake.append(solution))
+                {
+                    snakes.add(0, solution);
+                }
+            }
+            else
+            {
+                snakes.add(0, solution);
+            }
 
-			p.X(solution.XStart);
-			p.Y(solution.YStart);
-		}
-	}
+            p.X(solution.XStart);
+            p.Y(solution.YStart);
+        }
+    }
 
-	/**
-	 * Finds all snakes that lead to the solution by taking a snapshot of each end point after each iteration of d and
-	 * then working forward from 0 to d<sub>solution</sub>.
-	 *
-	 * @param snakes
-	 * 		All found snakes that lead to the solution
-	 * @param vs
-	 * 		All saved end points indexed on <em>d</em>
-	 * @param pa
-	 * 		Elements of the first object. Usually the original object
-	 * @param pb
-	 * 		Elements of the second object. Usually the current object
-	 * @param N
-	 * 		The number of elements of the first object to compare
-	 * @param M
-	 * 		The number of elements of the second object to compare
-	 *
-	 * @throws Exception
-	 */
-	static <T> void SolveReverse(List<Snake<T>> snakes, List<V> vs, T[] pa, T[] pb, int N, int M) throws Exception
-	{
-		Pair<Integer> p = new Pair<>(0, 0);
+    /**
+     * Finds all snakes that lead to the solution by taking a snapshot of each end point after each iteration of d and
+     * then working forward from 0 to d<sub>solution</sub>.
+     *
+     * @param snakes
+     *         All found snakes that lead to the solution
+     * @param vs
+     *         All saved end points indexed on <em>d</em>
+     * @param pa
+     *         Elements of the first object. Usually the original object
+     * @param pb
+     *         Elements of the second object. Usually the current object
+     * @param N
+     *         The number of elements of the first object to compare
+     * @param M
+     *         The number of elements of the second object to compare
+     *
+     * @throws Exception
+     */
+    static <T> void SolveReverse(List<Snake<T>> snakes, List<V> vs, T[] pa, T[] pb, int N, int M) throws Exception
+    {
+        Pair<Integer> p = new Pair<>(0, 0);
 
-		for (int d = vs.size() - 1; p.X() < N || p.Y() < M; d--)
-		{
-			V v = vs.get(d);
+        for (int d = vs.size() - 1; p.X() < N || p.Y() < M; d--)
+        {
+            V v = vs.get(d);
 
-			int k = p.X() - p.Y();
+            int k = p.X() - p.Y();
 
-			int xEnd = v.getK(k);
-			int yEnd = xEnd - k;
+            int xEnd = v.getK(k);
+            int yEnd = xEnd - k;
 
-			if (xEnd != p.X() || yEnd != p.Y())
-			{
-				throw new Exception(
-						"No solution for " + "d:" + d + " k:" + k + " p:( " + p.X() + ", " + p.Y() + " )" + " V:( " +
-						xEnd + ", " + yEnd + " )");
-			}
+            if (xEnd != p.X() || yEnd != p.Y())
+            {
+                throw new Exception(
+                        "No solution for " + "d:" + d + " k:" + k + " p:( " + p.X() + ", " + p.Y() + " )" + " V:( " +
+                        xEnd + ", " + yEnd + " )");
+            }
 
-			Snake<T> solution = new Snake<>(p.X(), N - p.X(), p.Y(), M - p.Y(), false, N - M, v, k, d, pa, pb);
+            Snake<T> solution = new Snake<>(p.X(), N - p.X(), p.Y(), M - p.Y(), false, N - M, v, k, d, pa, pb);
 
-			if (solution.getXEnd() != p.X() || solution.getYEnd() != p.Y())
-			{
-				throw new Exception(
-						"Missed solution for " + "d:" + d + " k:" + k + " p:( " + p.X() + ", " + p.Y() + " )" +
-						" V:( " + xEnd + ", " + yEnd + " )");
-			}
+            if (solution.getXEnd() != p.X() || solution.getYEnd() != p.Y())
+            {
+                throw new Exception(
+                        "Missed solution for " + "d:" + d + " k:" + k + " p:( " + p.X() + ", " + p.Y() + " )" +
+                        " V:( " + xEnd + ", " + yEnd + " )");
+            }
 
-			if (snakes.size() > 0)
-			{
-				Snake<T> snake = snakes.get(snakes.size() - 1);
-				// combine snakes of the same kind
-				if (snake.append(solution))
-				{
-					solution = snake;
-				}
-				else
-				{
-					snakes.add(solution);
-				}
-			}
-			else
-			{
-				snakes.add(solution);
-			}
+            if (snakes.size() > 0)
+            {
+                Snake<T> snake = snakes.get(snakes.size() - 1);
+                // combine snakes of the same kind
+                if (snake.append(solution))
+                {
+                    solution = snake;
+                }
+                else
+                {
+                    snakes.add(solution);
+                }
+            }
+            else
+            {
+                snakes.add(solution);
+            }
 
-			p.X(solution.XStart);
-			p.Y(solution.YStart);
-		}
-	}
+            p.X(solution.XStart);
+            p.Y(solution.YStart);
+        }
+    }
 }
