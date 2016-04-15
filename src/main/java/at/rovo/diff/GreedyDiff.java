@@ -135,11 +135,11 @@ public class GreedyDiff
             // d = number of differences in that trace
             if (forward)
             {
-                last = LCS.Forward(snakes, pa, N, pb, M, V, d);
+                last = LCS.Forward(pa, N, pb, M, V, d);
             }
             else
             {
-                last = LCS.Reverse(snakes, pa, N, pb, M, V, d);
+                last = LCS.Reverse(pa, N, pb, M, V, d);
             }
 
             vs.add(V.CreateCopy(d, forward, (forward ? 0 : DELTA)));
