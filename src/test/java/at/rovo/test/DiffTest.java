@@ -10,10 +10,10 @@ import java.lang.invoke.MethodHandles;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class simple compares two HTML files and prints the differences in both files to the console where a line
@@ -25,7 +25,7 @@ import org.junit.Test;
 public class DiffTest
 {
     /** The logger of this class **/
-    private static Logger LOG = LogManager.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     /**
      * Reads in two files (<em>testPattern1.html</em> and <em>testPattern2.html</em>) from the resource directory the

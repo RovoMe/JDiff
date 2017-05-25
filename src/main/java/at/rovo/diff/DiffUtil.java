@@ -5,10 +5,11 @@ import at.rovo.parser.Token;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This util class provides some helper functions to deal with results returned by the diff algorithm more easily.
@@ -19,7 +20,7 @@ import org.apache.logging.log4j.Logger;
 public class DiffUtil
 {
     /** The logger of this class **/
-    private final static Logger LOG = LogManager.getLogger(DiffUtil.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     /** prevent initializations of the util class **/
     private DiffUtil()

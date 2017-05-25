@@ -1,50 +1,53 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<artifactId>JDiff</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+    <artifactId>JDiff</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-	<name>Java based Diff</name>
-	<description>Java implementation of Myers Diff algorithm, based on a port from the C# implementation done by Nicholas Butler at http://simplygenius.net/Article/DiffTutorial1 or http://www.codeproject.com/Articles/42279/Investigating-Myers-diff-algorithm-Part-1-of-2</description>
+    <name>Java based Diff</name>
+    <description>Java implementation of Myers Diff algorithm, based on a port from the C# implementation done by
+        Nicholas Butler at http://simplygenius.net/Article/DiffTutorial1 or
+        http://www.codeproject.com/Articles/42279/Investigating-Myers-diff-algorithm-Part-1-of-2
+    </description>
 
-	<parent>
-		<groupId>at.rovo</groupId>
-		<artifactId>super-pom</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
+    <parent>
+        <groupId>at.rovo</groupId>
+        <artifactId>super-pom</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
 
-	<dependencies>
-		<!-- Log4J -->
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-		</dependency>
-		<!-- JUnit -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>at.rovo</groupId>
-			<artifactId>Parser</artifactId>
-			<version>${parser.version}</version>
-		</dependency>
-	</dependencies>
+    <dependencies>
+        <!-- Logging -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <!-- JUnit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>at.rovo</groupId>
+            <artifactId>Parser</artifactId>
+            <version>${parser.version}</version>
+        </dependency>
+    </dependencies>
 
-	<build>
-		<plugins>
-			<!-- compiler settings -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <!-- compiler settings -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

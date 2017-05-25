@@ -1,0 +1,33 @@
+<configuration>
+
+    <property name="pattern" value="%date{yyyy-MM-dd HH:mm:ss.SSS} [%-5p] [%-25.25thread{24}] %-40.40logger{39}: %msg %throwable %n"/>
+
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="File" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>log/Diff.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+
+            <!-- keep 5 days' worth of history -->
+            <maxHistory>5</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>${pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="at.rovo.diff" level="error" />
+
+    <root level="info" additivity="false">
+        <appender-ref ref="Console"/>
+        <appender-ref ref="File"/>
+    </root>
+
+</configuration>
